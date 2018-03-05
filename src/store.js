@@ -8,7 +8,8 @@ import thunk from 'redux-thunk';
 import Parse from 'parse';
 Parse.initialize('timer');
 // Parse.serverURL = serverURL;
-Parse.serverURL = 'http://111.230.188.125:1337/parse';
+Parse.serverURL = 'http://111.230.190.237:1337/parse';
+Parse.liveQueryServerURL = 'ws://111.230.190.237:1337/parse';
 
 const win = window;
 const middlewares = [];
