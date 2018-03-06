@@ -7,9 +7,8 @@ import thunk from 'redux-thunk';
 //初始化Parse
 import Parse from 'parse';
 Parse.initialize('timer');
-// Parse.serverURL = serverURL;
-Parse.serverURL = 'http://111.230.190.237:1337/parse';
-Parse.liveQueryServerURL = 'ws://111.230.190.237:1337/parse';
+Parse.serverURL = process.env.REACT_APP_SERVER_URL;
+Parse.liveQueryServerURL = process.env.REACT_APP_LIVEQUERY_SERVER_URL;
 
 const win = window;
 const middlewares = [];
