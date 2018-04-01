@@ -43,6 +43,7 @@ export class CountDown extends React.Component {
         console.log(`countDown:componentWillUnmount`);
         if (this.interval) {
             clearInterval(this.interval);
+            this.interval = null;
         }
     }
 
@@ -56,7 +57,12 @@ export class CountDown extends React.Component {
             let startTime = game.get('startTime').getTime();
             for (let round of game.get('rounds')) {
                 rounds.push({ ...round, startTime });
-                startTime = startTime + round.duration * 60 * 1000;
+                console.log(`countDown:appendRoundStartTime():level:${round.level} startTime:${startTime} `);
+                if (!round.breakDuration || round.breakDuration === 0) {
+                    startTime = startTime + round.duration * 60 * 1000;
+                } else {
+                    startTime = startTime + (round.duration + round.breakDuration) * 60 * 1000;
+                }
             }
         }
         return rounds;
@@ -76,6 +82,7 @@ export class CountDown extends React.Component {
 
         let currentRoundIndex = -1;
         let status = 'before';
+        let breaking = false;
         let countdown = '00:00';
         if (this.state.rounds) {
             for (var i = 0; i < this.state.rounds.length; i++) {
@@ -89,20 +96,64 @@ export class CountDown extends React.Component {
                         currentRoundIndex = i;
                         break;
                     } else {
-                        if (time >= 0 && time < round.duration * 60 * 1000) {
-                            countdown = formatCountdown(round.duration * 60 * 1000 - time);
-                            status = 'gaming';
-                            currentRoundIndex = i;
-                            break;
+                        //判断是否执行的当前round
+                        if (time >= 0) {
+                            //没有round.breakDuration
+                            if (!round.breakDuration || round.breakDuration === 0) {
+                                if (time <= round.duration * 60 * 1000) {
+                                    countdown = formatCountdown(round.duration * 60 * 1000 - time);
+                                    status = 'gaming';
+                                    breaking = false;
+                                    currentRoundIndex = i;
+                                    break;
+                                }
+                            }
+                            else {
+                                //有round.breakDuration 就要判断是正在执行round.duration还是正执行round.breakDuration
+                                if (time <= (round.duration + round.breakDuration) * 60 * 1000) {
+                                    if (time <= round.duration * 60 * 1000) {
+                                        countdown = formatCountdown(round.duration * 60 * 1000 - time);
+                                        breaking = false;
+                                    } else if (time < (round.duration + round.breakDuration) * 60 * 1000) {
+                                        countdown = formatCountdown((round.duration + round.breakDuration) * 60 * 1000 - time);
+                                        breaking = true;
+                                    }
+                                    status = 'gaming';
+                                    currentRoundIndex = i;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
                 else {
-                    if (time >= 0 && time < round.duration * 60 * 1000) {
-                        countdown = formatCountdown(round.duration * 60 * 1000 - time);
-                        status = 'gaming';
-                        currentRoundIndex = i;
-                        break;
+                    //判断是否执行的当前round
+                    if (time >= 0) {
+                        //没有round.breakDuration
+                        if (!round.breakDuration || round.breakDuration === 0) {
+                            if (time <= round.duration * 60 * 1000) {
+                                countdown = formatCountdown(round.duration * 60 * 1000 - time);
+                                status = 'gaming';
+                                breaking = false;
+                                currentRoundIndex = i;
+                                break;
+                            }
+                        }
+                        else {
+                            //有round.breakDuration 就要判断是正在执行round.duration还是正执行round.breakDuration
+                            if (time <= (round.duration + round.breakDuration) * 60 * 1000) {
+                                if (time <= round.duration * 60 * 1000) {
+                                    countdown = formatCountdown(round.duration * 60 * 1000 - time);
+                                    breaking = false;
+                                } else if (time < (round.duration + round.breakDuration) * 60 * 1000) {
+                                    countdown = formatCountdown((round.duration + round.breakDuration) * 60 * 1000 - time);
+                                    breaking = true;
+                                }
+                                status = 'gaming';
+                                currentRoundIndex = i;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -113,7 +164,7 @@ export class CountDown extends React.Component {
             countdown = '00:00'
             currentRoundIndex = this.state.rounds.length - 1;
         }
-        // console.log(`countDown:getCountdown():status:${status} countdown:${countdown} currentRoundIndex:${currentRoundIndex}`);
+        console.log(`countDown:getCountdown():status:${status} countdown:${countdown} currentRoundIndex:${currentRoundIndex} breaking:${breaking}`);
         if (this.state.currentRoundIndex !== currentRoundIndex) {
             this.setState({ currentRoundIndex });
             this.props.updateCurrentRoundIndex(currentRoundIndex)
@@ -123,10 +174,21 @@ export class CountDown extends React.Component {
             this.setState({ status });
             this.props.updateStatus(status)
         }
+        if (this.state.breaking !== breaking) {
+            this.setState({ breaking });
+        }
 
         this.setState({
             countdown
         })
+
+        //如果已经结束 停止倒计时 
+        if (status === 'after') {
+            if (this.interval) {
+                clearInterval(this.interval);
+                this.interval = null;
+            }
+        }
     }
 
 
@@ -137,7 +199,11 @@ export class CountDown extends React.Component {
             countdownTitle = '尚未开始';
         } else if (this.state.status === 'gaming') {
             let round = this.state.rounds[this.state.currentRoundIndex];
-            countdownTitle = `当前级别:${round ? round.level : ''}`;
+            if (this.state.breaking) {
+                countdownTitle = `级别:${round ? round.level : ''}休息中`;
+            } else {
+                countdownTitle = `级别:${round ? round.level : ''}`;
+            }
         } else if (this.state.status === 'after') {
             let round = this.state.rounds[this.state.currentRoundIndex];
             countdownTitle = `已经结束 级别:${round ? round.level : ''}`;
