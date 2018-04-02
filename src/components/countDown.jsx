@@ -57,7 +57,7 @@ export class CountDown extends React.Component {
             let startTime = game.get('startTime').getTime();
             for (let round of game.get('rounds')) {
                 rounds.push({ ...round, startTime });
-                console.log(`countDown:appendRoundStartTime():level:${round.level} startTime:${startTime} `);
+                // console.log(`countDown:appendRoundStartTime():level:${round.level} startTime:${startTime} `);
                 if (!round.breakDuration || round.breakDuration === 0) {
                     startTime = startTime + round.duration * 60 * 1000;
                 } else {
@@ -164,7 +164,7 @@ export class CountDown extends React.Component {
             countdown = '00:00'
             currentRoundIndex = this.state.rounds.length - 1;
         }
-        console.log(`countDown:getCountdown():status:${status} countdown:${countdown} currentRoundIndex:${currentRoundIndex} breaking:${breaking}`);
+        // console.log(`countDown:getCountdown():status:${status} countdown:${countdown} currentRoundIndex:${currentRoundIndex} breaking:${breaking}`);
         if (this.state.currentRoundIndex !== currentRoundIndex) {
             this.setState({ currentRoundIndex });
             this.props.updateCurrentRoundIndex(currentRoundIndex)

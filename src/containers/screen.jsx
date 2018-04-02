@@ -34,11 +34,22 @@ class ViewGame extends React.Component {
     componentWillReceiveProps(nextProps) {
         //device创建完毕 监听device列表
         if (!this.props.device && nextProps.device) {
-            console.log(`screen:componentWillReceiveProps:${nextProps.device.get('uuid')}`);
+            console.log(`screen:componentWillReceiveProps:uuid:${nextProps.device.get('uuid')}`);
             this.props.subscribeDevice(nextProps.device);
         }
+        if(nextProps.game){
+            //如果老game为空 说明初次  监听
+            if(!this.props.game){
+                this.props.subscribeGame(nextProps.game);
+            }
+            //如果新老game的id不相同，说明大屏幕已经显示了不同的game
+            //取消对老game的监听  监听新的game
+            else if(this.props.game && this.props.game.id !== nextProps.game.id){
+                this.props.unsubscribeGame();//先取消对老game的监听
+                this.props.subscribeGame(nextProps.game);
+            }
+        }
         if (!this.props.game && nextProps.game) {
-            this.props.subscribeGame(nextProps.game);
         }
     }
 
