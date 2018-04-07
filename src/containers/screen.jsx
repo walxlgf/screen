@@ -37,14 +37,14 @@ class ViewGame extends React.Component {
             console.log(`screen:componentWillReceiveProps:uuid:${nextProps.device.get('uuid')}`);
             this.props.subscribeDevice(nextProps.device);
         }
-        if(nextProps.game){
+        if (nextProps.game) {
             //如果老game为空 说明初次  监听
-            if(!this.props.game){
+            if (!this.props.game) {
                 this.props.subscribeGame(nextProps.game);
             }
             //如果新老game的id不相同，说明大屏幕已经显示了不同的game
             //取消对老game的监听  监听新的game
-            else if(this.props.game && this.props.game.id !== nextProps.game.id){
+            else if (this.props.game && this.props.game.id !== nextProps.game.id) {
                 this.props.unsubscribeGame();//先取消对老game的监听
                 this.props.subscribeGame(nextProps.game);
             }
@@ -142,8 +142,17 @@ class ViewGame extends React.Component {
                                 title={this.props.game && this.props.game.get('title')}
                             />
                             <Card.Body>
-                                <div> {`开始时间:${this.props.game && formatShortDate(this.props.game.get('startTime'))}`}</div>
-                                <div> {`起始筹码:${this.props.game && this.props.game.get('startChips')}$`}</div>
+                                <div> {`开始时间:${formatShortDate(this.props.game.get('startTime'))}`}</div>
+                                <div> {`起始筹码:${this.props.game.get('startChips')}$`}</div>
+                                {/* <div> {`重买筹码:${this.props.game.get('rebuyChips')}$`}</div>
+                                <div> {`重买人次:${this.props.game.get('rebuyCount')}$`}</div>
+                                <div> {`加买筹码:${this.props.game.get('addonChips')}$`}</div>
+                                <div> {`加买人次:${this.props.game.get('addonCount')}$`}</div> */}
+                                <div> {`玩家人数:${this.props.game.get('players')}人`}</div>
+                                {this.props.game.get('rebuy') && <div> {`重买筹码:${this.props.game.get('rebuyChips')}$`}</div>}
+                                {this.props.game.get('rebuy') && <div> {`重买人次:${this.props.game.get('rebuyCount')}$`}</div>}
+                                {this.props.game.get('addon') && <div> {`加买筹码:${this.props.game.get('addonChips')}$`}</div>}
+                                {this.props.game.get('addon') && <div> {`加买人次:${this.props.game.get('addonCount')}$`}</div>}
                             </Card.Body>
                         </Card>
                         <WhiteSpace size='md' />
