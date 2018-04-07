@@ -8,7 +8,7 @@ WORKDIR $SCREEN_HOME
 
 RUN npm install
 
-# COPY . .
+COPY . .
 
 EXPOSE 3001
 
