@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'antd-mobile';
 import { formatCountdown } from '../utils';
+import './countDown.less';
 export class CountDown extends React.Component {
     constructor(props) {
         super(props);
@@ -68,6 +69,9 @@ export class CountDown extends React.Component {
         return rounds;
     }
 
+    /**
+     * 
+     */
     getCountdown() {
         //判断是不是暂停 如果有值 是在暂停
         let pauseTime = this.props.game.get('pauseTime');
@@ -195,6 +199,9 @@ export class CountDown extends React.Component {
     render() {
         let countdownTitle = '';
         let pause = this.props.game ? this.props.game.get('pauseTime') ? true : false : false;
+        let blind = '--';
+        let ante = '--'
+        let nextBlind = '--'
         if (this.state.status === 'before') {
             countdownTitle = '尚未开始';
         } else if (this.state.status === 'gaming') {
@@ -204,21 +211,83 @@ export class CountDown extends React.Component {
             } else {
                 countdownTitle = `级别:${round ? round.level : ''}`;
             }
+            blind = round ? `${round.smallBlind}/${round.bigBlind}` : '--';
+            ante = round ? `${round.ante}` : '--';
+            if (this.state.currentRoundIndex + 1 < this.state.rounds.length) {
+                let nextRound = this.state.rounds[this.state.currentRoundIndex + 1];
+                nextBlind = nextRound ? `${nextRound.smallBlind}/${nextRound.bigBlind}` : '--';
+            }
+
         } else if (this.state.status === 'after') {
             let round = this.state.rounds[this.state.currentRoundIndex];
             countdownTitle = `已经结束 级别:${round ? round.level : ''}`;
+            blind = round ? `${round.smallBlind}/${round.bigBlind}` : '--';
+            ante = round ? `${round.ante}` : '--';
         }
 
         return (
-            <Card>
-                <Card.Header
-                    title={countdownTitle}
-                    extra={pause ? '暂停中' : ''}
-                />
-                <Card.Body>
-                    <div style={{ fontSize: 30 }}> {this.state.countdown}</div>
-                </Card.Body>
-            </Card>
+            <div className="box">
+                <div className="roundbox">
+                    <div className="countdown">
+                        {this.state.countdown}
+                    </div>
+                    <div className="rowbox">
+                        <div className="lblbox">
+                            <div className="lbl">盲注</div>
+                            <div className="lbl">BLIND</div>
+                        </div>
+                        <div className="valuebox">
+                            <div className="value">
+                                {blind}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rowbox">
+                        <div className="lblbox">
+                            <div className="lbl">前注</div>
+                            <div className="lbl">ANTE</div>
+                        </div>
+                        <div className="valuebox">
+                            <div className="value">
+                                {ante}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="nextroundbox">
+                    <div className="rowbox">
+                        <div className="lblbox">
+                            <div className="lbl">下一级别</div>
+                            <div className="lbl">NEXT LEVEL</div>
+                        </div>
+                        <div className="valuebox">
+                            <div className="value">
+                                {nextBlind}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rowbox">
+                        <div className="lblbox">
+                            <div className="lbl">下一休息</div>
+                            <div className="lbl">NEXT BREAK</div>
+                        </div>
+                        <div className="valuebox">
+                            <div className="value">
+                                {this.state.countdown}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            // <Card>
+            //     <Card.Header
+            //         title={countdownTitle}
+            //         extra={pause ? '暂停中' : ''}
+            //     />
+            //     <Card.Body>
+            //         <div style={{ fontSize: 30 }}> {this.state.countdown}</div>
+            //     </Card.Body>
+            // </Card>
         );
     }
 }
