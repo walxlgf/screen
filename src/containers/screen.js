@@ -382,11 +382,11 @@ class ViewGame extends React.Component {
                             <div className="sidebox">
                                 <div className="siderowbox">
                                     <div className="leftlblbox">
-                                        <div className="leftlbl">剩余人数</div>
-                                        <div className="leftlbl">REST COUNT</div>
+                                        <div className="sidelblchs">剩余人数</div>
+                                        <div className="sidelbleng">REST COUNT</div>
                                     </div>
                                     <div className="leftvaluebox">
-                                        <div className="leftvalue">
+                                        <div className="sidevalue">
                                             {restPlayers}
                                         </div>
                                     </div>
@@ -394,11 +394,11 @@ class ViewGame extends React.Component {
 
                                 <div className="siderowbox">
                                     <div className="leftlblbox">
-                                        <div className="leftlbl">参赛人数</div>
-                                        <div className="leftlbl">PLAYER COUNT</div>
+                                        <div className="sidelblchs">参赛人数</div>
+                                        <div className="sidelbleng">PLAYER COUNT</div>
                                     </div>
                                     <div className="leftvaluebox">
-                                        <div className="leftvalue">
+                                        <div className="sidevalue">
                                             {palyerCount}
                                         </div>
                                     </div>
@@ -406,11 +406,11 @@ class ViewGame extends React.Component {
 
                                 <div className="siderowbox">
                                     <div className="leftlblbox">
-                                        <div className="leftlbl">奖励人数</div>
-                                        <div className="leftlbl">REWARD COUNT</div>
+                                        <div className="sidelblchs">奖励人数</div>
+                                        <div className="sidelbleng">REWARD COUNT</div>
                                     </div>
                                     <div className="leftvaluebox">
-                                        <div className="leftvalue">
+                                        <div className="sidevalue">
                                             {rewardPlayers}
                                         </div>
                                     </div>
@@ -423,8 +423,8 @@ class ViewGame extends React.Component {
                                     </div>
                                     <div className="rowbox">
                                         <div className="lblbox">
-                                            <div className="lbl">盲注</div>
-                                            <div className="lbl">BLIND</div>
+                                            <div className="lblchs">盲注</div>
+                                            <div className="lbleng">BLIND</div>
                                         </div>
                                         <div className="valuebox">
                                             <div className="value">
@@ -434,8 +434,8 @@ class ViewGame extends React.Component {
                                     </div>
                                     <div className="rowbox">
                                         <div className="lblbox">
-                                            <div className="lbl">前注</div>
-                                            <div className="lbl">ANTE</div>
+                                            <div className="lblchs">前注</div>
+                                            <div className="lbleng">ANTE</div>
                                         </div>
                                         <div className="valuebox">
                                             <div className="value">
@@ -447,8 +447,8 @@ class ViewGame extends React.Component {
                                 <div className={nextroundbox2}>
                                     <div className="rowbox">
                                         <div className="lblbox">
-                                            <div className="lbl">下一级别</div>
-                                            <div className="lbl">NEXT LEVEL</div>
+                                            <div className="lblchs">下一级别</div>
+                                            <div className="lbleng">NEXT LEVEL</div>
                                         </div>
                                         <div className="valuebox">
                                             <div className="value">
@@ -461,11 +461,11 @@ class ViewGame extends React.Component {
                             <div className="sidebox">
                                 <div className="siderowbox">
                                     <div className="rightlblbox">
-                                        <div className="rightlbl">当前级别</div>
-                                        <div className="rightlbl">CURRENT LEVEL</div>
+                                        <div className="sidelblchs">当前级别</div>
+                                        <div className="sidelbleng">CURRENT LEVEL</div>
                                     </div>
                                     <div className="rightvaluebox">
-                                        <div className="rightvalue">
+                                        <div className="sidevalue">
                                             {currentLevel}
                                         </div>
                                     </div>
@@ -473,11 +473,11 @@ class ViewGame extends React.Component {
 
                                 <div className="siderowbox">
                                     <div className="rightlblbox">
-                                        <div className="rightlbl">下一休息</div>
-                                        <div className="rightlbl">NEXT BREAK</div>
+                                        <div className="sidelblchs">下一休息</div>
+                                        <div className="sidelbleng">NEXT BREAK</div>
                                     </div>
                                     <div className="rightvaluebox">
-                                        <div className="rightvalue">
+                                        <div className="sidevalue">
                                             {this.state.nextBreak}
                                         </div>
                                     </div>
@@ -485,11 +485,11 @@ class ViewGame extends React.Component {
 
                                 <div className="siderowbox">
                                     <div className="rightlblbox">
-                                        <div className="rightlbl">平均记分牌</div>
-                                        <div className="rightlbl">AVG.CHIPS</div>
+                                        <div className="sidelblchs">平均记分牌</div>
+                                        <div className="sidelbleng">AVG.CHIPS</div>
                                     </div>
                                     <div className="rightvaluebox">
-                                        <div className="rightvalue">
+                                        <div className="sidevalue">
                                             {avgChips}
                                         </div>
                                     </div>
@@ -498,6 +498,7 @@ class ViewGame extends React.Component {
                         </div>
 
                         <div className="footer">
+                            <div className="footertitle">编码:{uuid}</div>
                         </div>
                     </div>
                 }
