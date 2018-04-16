@@ -33,15 +33,6 @@ class ViewGame extends React.Component {
         console.log(`screen:componentDidMount`);
         //初始化 用screen登录 监听 devices
         this.props.init();
-
-        console.log(`screen:componentDidMount:${this.props.game && this.props.game.get('title')}`);
-        //计算倒计时
-        if (this.props.game) {
-            this.getCountdown();
-            if (!this.props.game.get('pauseTime')) {
-                this.interval = setInterval(() => this.getCountdown(), 980);
-            }
-        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,16 +59,8 @@ class ViewGame extends React.Component {
             rounds: [...this.appendRoundStartTime(nextProps.game)],
         });
 
-        //倒计时
-        if (nextProps.game && nextProps.game.get('pauseTime')) {
-            if (this.interval) {
-                clearInterval(this.interval);
-                this.interval = null;
-            }
-        } else {
-            if (!this.interval) {
-                this.interval = setInterval(() => this.getCountdown(), 980);
-            }
+        if (!this.interval) {
+            this.interval = setInterval(() => this.getCountdown(), 980);
         }
     }
 
@@ -97,7 +80,6 @@ class ViewGame extends React.Component {
      * 根据game的startTime 生成rounds中每个round的开始时间 用于倒计时
      */
     appendRoundStartTime(game) {
-        console.log(`countDown:appendRoundStartTime()`);
         let rounds = [];
         if (game) {
             let startTime = game.get('startTime').getTime();
@@ -111,6 +93,8 @@ class ViewGame extends React.Component {
                 }
             }
         }
+
+        console.log(`countDown:appendRoundStartTime():rounds:${rounds.length}`);
         return rounds;
     }
 
@@ -126,8 +110,7 @@ class ViewGame extends React.Component {
         //没有暂停取当前值
         if (pauseTime) {
             dateTime = pauseTime.getTime();
-        }
-        else {
+        } else {
             dateTime = new Date().getTime();
         }
 
@@ -257,13 +240,15 @@ class ViewGame extends React.Component {
             nextBreak,
         })
 
-        //如果已经结束 停止倒计时 
-        if (status === 'after') {
+        //如果暂停或者已经结束 停止倒计时 
+        if (pauseTime || status === 'after') {
             if (this.interval) {
                 clearInterval(this.interval);
                 this.interval = null;
             }
         }
+
+
     }
 
     render() {

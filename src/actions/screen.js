@@ -147,7 +147,7 @@ export const subscribeGame = (game) => {
             dispatch({ type: S_GAME_OPENED });
         });
         sGame.on('update', (g) => {
-            console.log(`subscribeGame:game updated:${JSON.stringify(g.get('title'))}`);
+            console.log(`subscribeGame:game updated:${g.get('title')} pauseTime:${g.get('pauseTime')}`);
             dispatch({ type: S_GAME_UPDATED, updateGame: g });
         });
         sGame.on('close', () => {
