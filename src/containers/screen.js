@@ -1,18 +1,13 @@
 import React from 'react';
-import { WingBlank, Toast, Card, WhiteSpace } from 'antd-mobile';
-import { List } from 'antd-mobile';
+import Marquee from 'react-smooth-marquee';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
-import { CountDown } from '../components/countDown';
 import { lchmod } from 'fs';
 import { formatShortDate } from '../utils';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame } from '../actions/screen';
 import './screen.less';
 import { formatCountdown } from '../utils';
-
-const Item = List.Item;
-const Brief = Item.Brief;
 
 class ViewGame extends React.Component {
     constructor(props) {
@@ -263,9 +258,12 @@ class ViewGame extends React.Component {
         let currentLevel = '--';
 
         //各种状态的样式  未开始 正常 暂停  休息中 已经结束 等状态通过这个样式来区别
-        let rbg = 'rbg';
-        let roundbox2 = "roundbox2 ";
-        let nextroundbox2 = "nextroundbox2 ";
+        // let rbg = 'rbg';
+        // let roundbox2 = "roundbox2 ";
+        // let nextroundbox2 = "nextroundbox2 ";
+
+        let statusChs;
+        let statusEng;
 
         let palyerCount = '--';
         let totalChips = '--';
@@ -289,13 +287,16 @@ class ViewGame extends React.Component {
 
             if (this.state.status === 'before') {
                 countdownTitle = '尚未开始';
-                rbg = 'rbgbefore';
+                statusChs = '准 备';
+                statusEng = 'PREPARE';
+                // rbg = 'rbgbefore';
             } else if (this.state.status === 'gaming') {
                 let round = this.state.rounds[this.state.currentRoundIndex];
                 currentLevel = round.level;
                 if (this.state.breaking) {
                     countdownTitle = `级别:${round ? round.level : ''}休息中`;
-                    rbg = 'rbgbreaking';
+                    statusChs = '休 息';
+                    statusEng = 'BREAK';
                 } else {
                     countdownTitle = `级别:${round ? round.level : ''}`;
                 }
@@ -307,7 +308,7 @@ class ViewGame extends React.Component {
                 }
 
             } else if (this.state.status === 'after') {
-                rbg = 'rbgafter';
+                // rbg = 'rbgafter';
                 let round = this.state.rounds[this.state.currentRoundIndex];
                 if (round) {
                     currentLevel = round.level;
@@ -317,11 +318,11 @@ class ViewGame extends React.Component {
                 }
             }
             if (pause) {
-                rbg = 'rbgpausing';
+                // rbg = 'rbgpausing';
             }
 
-            roundbox2 = roundbox2 + rbg;
-            nextroundbox2 = nextroundbox2 + rbg;
+            // roundbox2 = roundbox2 + rbg;
+            // nextroundbox2 = nextroundbox2 + rbg;
 
 
             let game = this.props.game;
@@ -361,6 +362,9 @@ class ViewGame extends React.Component {
                                 <div className="subTitle">{subTitle}</div>
                             </div>
                             <div className="headersidebox">
+                                <div className="gameuuidbox">
+                                    <div className="gameuuid">编码:{uuid}</div>
+                                </div>
                             </div>
                         </div>
                         <div className="body">
@@ -402,41 +406,56 @@ class ViewGame extends React.Component {
                                 </div>
                             </div>
                             <div className="centerbox">
-                                <div className={roundbox2}>
+                                <div className="roundbox2">
                                     <div className="countdown">
                                         {this.state.countdown}
                                     </div>
-                                    <div className="rowbox">
-                                        <div className="lblbox">
-                                            <div className="lblchs">盲注</div>
-                                            <div className="lbleng">BLIND</div>
-                                        </div>
-                                        <div className="valuebox">
-                                            <div className="value">
-                                                {blind}
+
+                                    {!statusChs && <div className="blindbox">
+                                        <div className="rowbox">
+                                            <div className="lblbox">
+                                                <div className="lblchs">盲注</div>
+                                                <div className="lbleng">BLIND</div>
+                                            </div>
+                                            <div className="valuebox">
+                                                <div className="value">
+                                                    {blind}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="rowbox">
-                                        <div className="lblbox">
-                                            <div className="lblchs">前注</div>
-                                            <div className="lbleng">ANTE</div>
-                                        </div>
-                                        <div className="valuebox">
-                                            <div className="value">
-                                                {ante}
+
+                                        <div className="rowbox">
+                                            <div className="lblbox">
+                                                <div className="lblchs">前注</div>
+                                                <div className="lbleng">ANTE</div>
+                                            </div>
+                                            <div className="valuebox">
+                                                <div className="value">
+                                                    {ante}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>}
+
+                                    {statusChs &&
+                                        <div className="statusbox">
+                                            <div className="statuschs">
+                                                {statusChs}
+                                            </div>
+                                            <div className="statuschs">
+                                                {statusEng}
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                                <div className={nextroundbox2}>
+                                <div className="nextroundbox2">
                                     <div className="rowbox">
                                         <div className="lblbox">
-                                            <div className="lblchs">下一级别</div>
-                                            <div className="lbleng">NEXT LEVEL</div>
+                                            <div className="minilblchs">下一级别</div>
+                                            <div className="minilbleng">NEXT LEVEL</div>
                                         </div>
                                         <div className="valuebox">
-                                            <div className="value">
+                                            <div className="minivalue">
                                                 {nextBlind}
                                             </div>
                                         </div>
@@ -483,7 +502,13 @@ class ViewGame extends React.Component {
                         </div>
 
                         <div className="footer">
-                            <div className="footertitle">编码:{uuid}</div>
+                            {pause &&
+                                <div className="footerpausebox">
+                                    <Marquee>
+                                        PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   
+                                    </Marquee>
+                                </div>
+                            }
                         </div>
                     </div>
                 }

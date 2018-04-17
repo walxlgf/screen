@@ -1,6 +1,8 @@
-
-
 /** ---------------------未绑定比赛的大屏幕-----------------------*/
+body {
+    margin: 0;
+}
+
 .uuidfull {
     display: -webkit-flex;
     display: -moz-flex;
@@ -16,6 +18,7 @@
     background-repeat: no-repeat;
     background-size: 100vw 100vh
 }
+
 .uuidbox {
     width: 60vw;
     height: 50vh;
@@ -30,7 +33,6 @@
     background-color: #5555;
 }
 
-
 .uuid {
     height: 40vh;
     width: 100%;
@@ -42,7 +44,6 @@
     color: white;
     font-size: 40vh;
 }
-
 
 .uuiddesc {
     height: 10vh;
@@ -56,7 +57,6 @@
     font-size: 5vh;
 }
 
-
 /** ---------------------已经绑定比赛的大屏幕-----------------------*/
 
 .full {
@@ -66,11 +66,13 @@
     display: -ms-flex;
     display: flex;
     height: 100vh;
+    width: 100vw;
     flex-direction: column;
     background-image: url("../images/bg.jpg");
     background-repeat: no-repeat;
     background-size: 100vw 100vh
 }
+
 .header {
     width: 100%;
     height: 16vh;
@@ -80,8 +82,8 @@
     align-items: center;
 }
 
-
 /*两边*/
+
 .headersidebox {
     height: 100%;
     width: 20vw;
@@ -90,11 +92,9 @@
     display: -o-flex;
     display: -ms-flex;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
 }
-
-
 
 .headercenterbox {
     height: 100%;
@@ -104,7 +104,7 @@
     display: -o-flex;
     display: -ms-flex;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
@@ -119,7 +119,6 @@
     align-items: center;
 }
 
-
 .subTitle {
     flex-grow: 2;
     text-align: center;
@@ -130,11 +129,26 @@
     align-items: center;
 }
 
-
-
 .footer {
     width: 100%;
     height: 8vh;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.footerpausebox {
+    width: 80vw;
+    color: white;
+    font-size: 4vh;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.gameuuidbox {
+    width: 100%;
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
@@ -142,15 +156,15 @@
     justify-content: flex-end;
 }
 
-.footertitle {
+.gameuuid {
     text-align: center;
     color: white;
-    font-size:5vh;
+    font-size: 3vh;
     display: inline-flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    padding-right: 3vs;
+    padding-right: 3vw;
 }
 
 .body {
@@ -165,6 +179,7 @@
 }
 
 /*中间*/
+
 .centerbox {
     height: 76vh;
     width: 60vw;
@@ -188,6 +203,18 @@
     flex-grow: 5;
     border-radius: 1vh 1vh 0vh 0vh;
     align-items: flex-start;
+    background-color: #5555;
+}
+
+.blindbox {
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .nextroundbox2 {
@@ -202,33 +229,11 @@
     align-items: flex-start;
     border-radius: 0vh 0vh 1vh 1vh;
     margin-top: 1vh;
-}
-
-.rbg{
     background-color: #5555;
 }
 
-
-.rbgpausing{
-    background-color: #cc55;
-}
-
-
-.rbgbreaking{
-    background-color: #5a55;
-}
-
-
-.rbgbefore{
-    background-color: #fff5;
-}
-
-
-.rbgafter{
-    background-color: #bbb5;
-}
-
 .countdown {
+    width: 100%;
     height: 40vh;
     display: flex;
     display: -webkit-flex;
@@ -236,13 +241,43 @@
     justify-content: center;
     text-align: center;
     color: white;
-    font-size: 40vh;
+    font-size: 39vh;
 }
 
+.statusbox {
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.statuschs {
+    width: 100%;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-size: 8vh;
+}
+
+.statuseng {
+    width: 100%;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-size: 5vh;
+}
 
 .rowbox {
     width: 100%;
-    height: 10vh;
+    // height: 10vh;
     box-sizing: border-box;
     display: flex;
     display: -webkit-flex;
@@ -258,7 +293,7 @@
     display: -webkit-flex;
     flex-direction: column;
     flex-grow: 1;
-    align-items: flex-start; 
+    align-items: flex-start;
 }
 
 .valuebox {
@@ -268,7 +303,7 @@
     flex-direction: row-reverse;
     flex-grow: 3;
     align-items: flex-end;
-    align-items: center; 
+    align-items: center;
 }
 
 .value {
@@ -289,7 +324,26 @@
     color: white;
 }
 
+.minivalue {
+    box-sizing: border-box;
+    font-size: 7vh;
+    color: white;
+}
+
+.minilblchs {
+    text-align: left;
+    font-size: 5vh;
+    color: white;
+}
+
+.minilbleng {
+    text-align: left;
+    font-size: 3vh;
+    color: white;
+}
+
 /*左边*/
+
 .sidebox {
     height: 76vh;
     width: 20vw;
@@ -298,7 +352,7 @@
     display: -o-flex;
     display: -ms-flex;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
 }
 
@@ -327,6 +381,7 @@
     font-size: 5vh;
     color: white;
 }
+
 .sidelbleng {
     text-align: left;
     font-size: 3vh;
