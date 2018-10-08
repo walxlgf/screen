@@ -1,5 +1,6 @@
 import React from 'react';
 import Marquee from 'react-smooth-marquee';
+import QRCode from 'qrcode';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
@@ -13,6 +14,7 @@ class ViewGame extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            qrcodeUrl: null,
             rounds: [],
             currentRoundIndex: -1,//当前正在运行round的index
             countdown: '',//倒计时字符串
@@ -28,13 +30,22 @@ class ViewGame extends React.Component {
         console.log(`screen:componentDidMount`);
         //初始化 用screen登录 监听 devices
         this.props.init();
+
     }
 
     componentWillReceiveProps(nextProps) {
-        //device创建完毕 监听device列表
+        //device创建完毕 监听device列表  根据uuid生成二维码qrcode
         if (!this.props.device && nextProps.device) {
             console.log(`screen:componentWillReceiveProps:uuid:${nextProps.device.get('uuid')}`);
             this.props.subscribeDevice(nextProps.device);
+
+            QRCode.toDataURL(nextProps.device.get('uuid')).then(url => {
+                this.setState({ qrcodeUrl: url });
+                console.log(`screen:QRCode:url:${url}`);
+            }).catch(err => {
+                console.log(`screen:QRCode:err:${err}`);
+            })
+
         }
         //监听比赛
         if (nextProps.game) {
@@ -67,6 +78,7 @@ class ViewGame extends React.Component {
             clearInterval(this.interval);
             this.interval = null;
         }
+
     }
 
 
@@ -274,6 +286,8 @@ class ViewGame extends React.Component {
         let subTitle = '';
 
 
+
+
         if (!this.props.game) {
             if (this.props.device)
                 uuid = this.props.device.get('uuid');
@@ -346,9 +360,12 @@ class ViewGame extends React.Component {
             <div>
                 {
                     !this.props.game && <div className="uuidfull">
-                        <div className="uuidbox">
-                            <div className="uuid">{uuid}</div>
+                        {/* <div className="uuidbox">
+                           <div className="uuid" >{uuid}</div>
                             <div className="uuiddesc">请在小程序比赛中输入[{uuid}]绑定比赛.</div>
+                        </div> */}
+                        <div className="qrcodebox">
+                            <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
                         </div>
                     </div>
                 }
@@ -406,49 +423,51 @@ class ViewGame extends React.Component {
                                 </div>
                             </div>
                             <div className="centerbox">
-                                <div className="roundbox2">
+                                <div className="countdownbox">
                                     <div className="countdown">
                                         {this.state.countdown}
                                     </div>
-
-                                    {!statusChs && <div className="blindbox">
-                                        <div className="rowbox">
-                                            <div className="lblbox">
-                                                <div className="lblchs">盲注</div>
-                                                <div className="lbleng">BLIND</div>
-                                            </div>
-                                            <div className="valuebox">
-                                                <div className="value">
-                                                    {blind}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="rowbox">
-                                            <div className="lblbox">
-                                                <div className="lblchs">前注</div>
-                                                <div className="lbleng">ANTE</div>
-                                            </div>
-                                            <div className="valuebox">
-                                                <div className="value">
-                                                    {ante}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>}
-
-                                    {statusChs &&
-                                        <div className="statusbox">
-                                            <div className="statuschs">
-                                                {statusChs}
-                                            </div>
-                                            <div className="statuschs">
-                                                {statusEng}
-                                            </div>
-                                        </div>
-                                    }
                                 </div>
-                                <div className="nextroundbox2">
+
+
+
+                                {!statusChs && <div className="roundbox3">
+                                    <div className="rowbox">
+                                        <div className="lblbox">
+                                            <div className="lblchs">盲注</div>
+                                            <div className="lbleng">BLIND</div>
+                                        </div>
+                                        <div className="valuebox">
+                                            <div className="value">
+                                                {blind}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="rowbox">
+                                        <div className="lblbox">
+                                            <div className="lblchs">前注</div>
+                                            <div className="lbleng">ANTE</div>
+                                        </div>
+                                        <div className="valuebox">
+                                            <div className="value">
+                                                {ante}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>}
+
+                                {statusChs &&
+                                    <div className="statusbox">
+                                        <div className="statuschs">
+                                            {statusChs}
+                                        </div>
+                                        <div className="statuschs">
+                                            {statusEng}
+                                        </div>
+                                    </div>
+                                }
+                                <div className="nextroundbox3">
                                     <div className="rowbox">
                                         <div className="lblbox">
                                             <div className="minilblchs">下一级别</div>
@@ -505,7 +524,7 @@ class ViewGame extends React.Component {
                             {pause &&
                                 <div className="footerpausebox">
                                     <Marquee>
-                                        PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   
+                                        PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停
                                     </Marquee>
                                 </div>
                             }

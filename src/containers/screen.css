@@ -17,6 +17,23 @@ body {
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
 }
+.qrcodebox {
+  width: auto;
+  height: 50vh;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1vh 1vh 1vh 1vh;
+  background-color: #5555;
+}
+.uuidqrcode {
+  height: 50vh;
+  width: auto;
+}
 .uuidbox {
   width: 60vw;
   height: 50vh;
@@ -123,14 +140,15 @@ body {
   display: -webkit-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 .footerpausebox {
-  width: 80vw;
+  width: 100vw;
   color: white;
   font-size: 4vh;
   white-space: nowrap;
   overflow: hidden;
+  background-color: #D32F2F;
 }
 .gameuuidbox {
   width: 100%;
@@ -142,7 +160,7 @@ body {
 }
 .gameuuid {
   text-align: center;
-  color: white;
+  color: rgba(255, 255, 255, 0.46);
   font-size: 3vh;
   display: inline-flex;
   flex-direction: row;
@@ -172,21 +190,35 @@ body {
   flex-direction: column;
   align-items: flex-start;
 }
-.roundbox2 {
+.countdownbox {
   width: 100%;
+  height: 40vh;
   display: -webkit-flex;
   display: -moz-flex;
   display: -o-flex;
   display: -ms-flex;
   display: flex;
   flex-direction: column;
-  flex-grow: 5;
   border-radius: 1vh 1vh 0vh 0vh;
   align-items: flex-start;
-  background-color: #5555;
+  background-color: rgba(0, 0, 0, 0.53);
 }
-.blindbox {
+.roundbox3 {
   width: 100%;
+  height: 24vh;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0vh 0vh 0vh 0vh;
+  align-items: flex-start;
+  background-color: rgba(0, 0, 0, 0.63);
+}
+.statusbox {
+  width: 100%;
+  height: 24vh;
   display: -webkit-flex;
   display: -moz-flex;
   display: -o-flex;
@@ -194,20 +226,22 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  border-radius: 0vh 0vh 0vh 0vh;
+  background-color: rgba(0, 255, 0, 0.33);
 }
-.nextroundbox2 {
+.nextroundbox3 {
   width: 100%;
+  height: 12vh;
   display: -webkit-flex;
   display: -moz-flex;
   display: -o-flex;
   display: -ms-flex;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   align-items: flex-start;
   border-radius: 0vh 0vh 1vh 1vh;
   margin-top: 1vh;
-  background-color: #5555;
+  background-color: rgba(0, 0, 0, 0.43);
 }
 .countdown {
   width: 100%;
@@ -218,17 +252,7 @@ body {
   justify-content: center;
   text-align: center;
   color: white;
-  font-size: 39vh;
-}
-.statusbox {
-  width: 100%;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -o-flex;
-  display: -ms-flex;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  font-size: 40vh;
 }
 .statuschs {
   width: 100%;
@@ -236,7 +260,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: rgba(255, 255, 255, 0.66);
   font-size: 8vh;
 }
 .statuseng {
@@ -245,7 +269,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: rgba(255, 255, 255, 0.66);
   font-size: 5vh;
 }
 .rowbox {
@@ -278,32 +302,32 @@ body {
 .value {
   box-sizing: border-box;
   font-size: 9vh;
-  color: white;
+  color: rgba(255, 255, 255, 0.86);
 }
 .lblchs {
   text-align: left;
-  font-size: 6vh;
-  color: white;
+  font-size: 4vh;
+  color: rgba(255, 255, 255, 0.86);
 }
 .lbleng {
   text-align: left;
-  font-size: 4vh;
-  color: white;
+  font-size: 3vh;
+  color: rgba(255, 255, 255, 0.86);
 }
 .minivalue {
   box-sizing: border-box;
   font-size: 7vh;
-  color: white;
+  color: rgba(255, 255, 255, 0.44);
 }
 .minilblchs {
   text-align: left;
-  font-size: 5vh;
-  color: white;
+  font-size: 4vh;
+  color: rgba(255, 255, 255, 0.44);
 }
 .minilbleng {
   text-align: left;
   font-size: 3vh;
-  color: white;
+  color: rgba(255, 255, 255, 0.44);
 }
 /*左边*/
 .sidebox {
@@ -332,18 +356,18 @@ body {
 }
 .sidevalue {
   box-sizing: border-box;
-  font-size: 8vh;
-  color: white;
+  font-size: 7vh;
+  color: rgba(255, 255, 255, 0.86);
 }
 .sidelblchs {
   text-align: left;
-  font-size: 5vh;
-  color: white;
+  font-size: 4vh;
+  color: rgba(255, 255, 255, 0.46);
 }
 .sidelbleng {
   text-align: left;
   font-size: 3vh;
-  color: white;
+  color: rgba(255, 255, 255, 0.46);
 }
 .leftlblbox {
   width: 100%;
