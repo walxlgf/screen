@@ -47,10 +47,12 @@ export const init = () => {
                 return query.first();
             }
         }).then(function (device) {
+            console.log(`screen:init:device:${device.id}`);
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
             if (device) {
                 let game = device.get('game');
+                console.log(`screen:init:game:${game.id}`);
                 //有game 
                 if (game) {
                     game.fetch({
