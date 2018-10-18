@@ -28,58 +28,55 @@ export const init = () => {
     return dispatch => {
         let installationId;
         //首先登录
-        Parse.User.logIn('screenuser', '1')
-            //获取session对象
-            .then(function (user) {
-                let sessionToken = user.getSessionToken();
-                console.log(`screen:init:user:sessionToken:${JSON.stringify(sessionToken)}`);
-                let query = new Parse.Query(Parse.Session);
-                query.equalTo('sessionToken', sessionToken);
-                return query.first();
-            })
+        //获取session对象
+        Parse.User.logIn('screenuser', '1').then(function (user) {
+            let sessionToken = user.getSessionToken();
+            console.log(`screen:init:user:sessionToken:${JSON.stringify(sessionToken)}`);
+            let query = new Parse.Query(Parse.Session);
+            query.equalTo('sessionToken', sessionToken);
+            return query.first();
+
+        }).then(function (session) {
             //根据session获取installationId
             //根据installationId获取device
-            .then(function (session) {
-                if (session) {
-                    installationId = session.get('installationId');
-                    console.log(`screen:init:installationId:${JSON.stringify(installationId)}`);
-                    let query = new Parse.Query('Device');
-                    query.equalTo('installationId', installationId);
-                    return query.first();
-                }
-            })
+            if (session) {
+                installationId = session.get('installationId');
+                console.log(`screen:init:installationId:${JSON.stringify(installationId)}`);
+                let query = new Parse.Query('Device');
+                query.equalTo('installationId', installationId);
+                return query.first();
+            }
+        }).then(function (device) {
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
-            .then(function (device) {
-                if (device) {
-                    let game = device.get('game');
-                    //有game 
-                    if (game) {
-                        game.fetch({
-                            success: function (game) {
-                                console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
-                                dispatch({ type: DEVICE_CREATED, device, deviceGame: game });
-                            }
-                        });
-                    } else {
-                        dispatch({ type: DEVICE_CREATED, device, deviceGame: null });
-                    }
+            if (device) {
+                let game = device.get('game');
+                //有game 
+                if (game) {
+                    game.fetch({
+                        success: function (game) {
+                            console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
+                            dispatch({ type: DEVICE_CREATED, device, deviceGame: game });
+                        }
+                    });
                 } else {
-                    let Device = Parse.Object.extend('Device');
-                    let device = new Device();
-                    device.set('installationId', installationId);
-                    return device.save();
+                    dispatch({ type: DEVICE_CREATED, device, deviceGame: null });
                 }
-            })
-            //获取新建的device
-            .then(function (device) {
-                console.log(`screen:device:${JSON.stringify(device)}`)
-                if (device) {
-                    dispatch({ type: DEVICE_CREATED, device });
-                }
-            }, function (error) {
-                console.log(`screen:error:${JSON.stringify(error)}`)
-            });
+            } else {
+                let Device = Parse.Object.extend('Device');
+                let device = new Device();
+                device.set('installationId', installationId);
+                //获取新建的device
+                device.save().then(function (device) {
+                    console.log(`screen:device:${JSON.stringify(device)}`)
+                    if (device) {
+                        dispatch({ type: DEVICE_CREATED, device });
+                    }
+                }, function (error) {
+                    console.log(`screen:error:${JSON.stringify(error)}`)
+                });
+            }
+        })
     }
 }
 
