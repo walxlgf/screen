@@ -47,7 +47,7 @@ export const init = () => {
                 return query.first();
             }
         }).then(function (device) {
-            console.log(`screen:init:device:${device.id}`);
+            console.log(`screen:init:device:${device}`);
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
             if (device) {
@@ -57,7 +57,7 @@ export const init = () => {
                 if (game) {
                     game.fetch({
                         success: function (game) {
-                            console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
+                            console.log(`screen:init::game:title:${game.id}`);
                             dispatch({ type: DEVICE_CREATED, device, deviceGame: game });
                         }
                     });
@@ -78,6 +78,8 @@ export const init = () => {
                     console.log(`screen:error:${JSON.stringify(error)}`)
                 });
             }
+        },function(error){
+            console.log(`screen:error:${JSON.stringify(error)}`)
         })
     }
 }
