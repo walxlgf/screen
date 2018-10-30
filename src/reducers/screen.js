@@ -32,6 +32,7 @@ export function screen(state = initialState, action) {
                 device: action.device,
                 deviceGame: action.deviceGame,
                 game: action.deviceGame,
+                role: action.role,
             }
         }
 
@@ -41,6 +42,7 @@ export function screen(state = initialState, action) {
                 device: action.device,
                 deviceGame: action.deviceGame,
                 game: action.deviceGame,
+                role: action.role,
             }
         }
 
@@ -55,6 +57,7 @@ export function screen(state = initialState, action) {
             return {
                 ...state,
                 game: game,
+                role: action.role,
             }
         }
         default:

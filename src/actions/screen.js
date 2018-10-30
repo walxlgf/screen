@@ -55,11 +55,13 @@ export const init = () => {
                 console.log(`screen:init:game:${game.id}`);
                 //有game 
                 if (game) {
-                    game.fetch({
-                        success: function (game) {
-                            console.log(`screen:init::game:title:${game.id}`);
+                    game.fetch().then(function (game) {
+                        console.log(`screen:init::game:title:${game.id}`);
+                        game.get('role').fetch().then(function (role) {
+                            dispatch({ type: DEVICE_CREATED, device, deviceGame: game, role });
+                        }).catch(function (error) {
                             dispatch({ type: DEVICE_CREATED, device, deviceGame: game });
-                        }
+                        });
                     });
                 } else {
                     dispatch({ type: DEVICE_CREATED, device, deviceGame: null });
@@ -78,7 +80,7 @@ export const init = () => {
                     console.log(`screen:error:${JSON.stringify(error)}`)
                 });
             }
-        },function(error){
+        }, function (error) {
             console.log(`screen:error:${JSON.stringify(error)}`)
         })
     }
@@ -100,11 +102,13 @@ export const subscribeDevice = (device) => {
                 let game = d.get('game');
                 //有game 
                 if (game) {
-                    game.fetch({
-                        success: function (game) {
-                            console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
+                    game.fetch().then(function (game) {
+                        console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
+                        game.get('role').fetch().then(function (role) {
+                            dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: game, role });
+                        }).catch(function (error) {
                             dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: game });
-                        }
+                        })
                     });
                 } else {
                     dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: null });
@@ -149,7 +153,11 @@ export const subscribeGame = (game) => {
         });
         sGame.on('update', (g) => {
             console.log(`subscribeGame:game updated:${g.get('title')} pauseTime:${g.get('pauseTime')}`);
-            dispatch({ type: S_GAME_UPDATED, updateGame: g });
+            game.get('role').fetch().then(function (role) {
+                dispatch({ type: S_GAME_UPDATED, updateGame: g, role })
+            }).catch(function (error) {
+                dispatch({ type: S_GAME_UPDATED, updateGame: g })
+            });
         });
         sGame.on('close', () => {
             console.log('subscribeGame:closed');

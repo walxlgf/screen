@@ -9,7 +9,6 @@ import { formatShortDate } from '../utils';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame } from '../actions/screen';
 import './screen.less';
 import { formatCountdown } from '../utils';
-
 class ViewGame extends React.Component {
     constructor(props) {
         super(props);
@@ -284,8 +283,12 @@ class ViewGame extends React.Component {
         let rewardPlayers = '--';
         let title = '';
         let subTitle = '';
+        let icon = '';
+        let bg = '';
 
-
+        let bgStyle = {
+            backgroundImage: `url("../images/bg.jpg")`
+        };
 
 
         if (!this.props.game) {
@@ -354,6 +357,14 @@ class ViewGame extends React.Component {
             rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
             totalChips = palyers * startChips + rebuyCount * rebuyChips + addonCount * addonChips;
             avgChips = totalChips / palyers;
+
+            let role = this.props.role;
+            icon = role.get('icon');
+            bg = role.get('bg');
+            if (bg)
+                bgStyle = {
+                    backgroundImage: `url("${bg}")`
+                };
         }
 
         return (
@@ -370,9 +381,11 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    this.props.game && <div className="full">
+                    this.props.game && <div className="full" style={bgStyle}>
+
                         <div className="header">
                             <div className="headersidebox">
+                                <img src={icon}></img>
                             </div>
                             <div className="headercenterbox">
                                 <div className="title">{title}</div>
