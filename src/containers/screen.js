@@ -29,13 +29,18 @@ class ViewGame extends React.Component {
         console.log(`screen:componentDidMount`);
         //初始化 用screen登录 监听 devices
         this.props.init();
-        // let device 
-        // QRCode.toDataURL(device.get('uuid')).then(url => {
-        //     this.setState({ qrcodeUrl: url });
-        //     console.log(`screen:QRCode:url:${url}`);
-        // }).catch(err => {
-        //     console.log(`screen:QRCode:err:${err}`);
-        // })
+        let device = this.props.device;
+        if (device) {
+            console.log(`screen:componentDidMount:device:${device.get('uuid')}`);
+            QRCode.toDataURL(device.get('uuid')).then(url => {
+                this.setState({ qrcodeUrl: url });
+                console.log(`screen:QRCode:url:${url}`);
+            }).catch(err => {
+                console.log(`screen:QRCode:err:${err}`);
+            })
+        }
+
+
     }
 
     componentWillReceiveProps(nextProps) {
