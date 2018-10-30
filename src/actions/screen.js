@@ -55,6 +55,7 @@ export const init = () => {
                 return query.first();
             }
         }).then(function (d) {
+            console.log(`screen:init:device:${device && device.get('uuid')}`);
             device = d;
             //4、根据device获取deviceRole
             let DeviceRole = Parse.Object.extend("DeviceRole");
@@ -62,12 +63,11 @@ export const init = () => {
             query.equalTo('device', device);
             query.include('role');
             return query.first();
-
         }).then(function (deviceRole) {
             //5、根据deviceRole获取绑定屏幕的role
-            role = deviceRole.get('role');
-            console.log(`screen:init:device:${device && device.get('uuid')}`);
-
+            if (deviceRole)
+                role = deviceRole.get('role');
+            console.log(`screen:init:role:${role && role.get('name')}`);
             //6、根据device获取game
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
