@@ -290,6 +290,16 @@ class ViewGame extends React.Component {
             backgroundImage: `url("../images/bg.jpg")`
         };
 
+        //
+        let role = this.props.role;
+        if (role) {
+            icon = role.get('icon');
+            bg = role.get('bg');
+            if (bg)
+                bgStyle = {
+                    backgroundImage: `url("${bg}")`
+                };
+        }
 
         if (!this.props.game) {
             if (this.props.device)
@@ -358,19 +368,12 @@ class ViewGame extends React.Component {
             totalChips = palyers * startChips + rebuyCount * rebuyChips + addonCount * addonChips;
             avgChips = totalChips / palyers;
 
-            let role = this.props.role;
-            icon = role.get('icon');
-            bg = role.get('bg');
-            if (bg)
-                bgStyle = {
-                    backgroundImage: `url("${bg}")`
-                };
         }
 
         return (
             <div>
                 {
-                    !this.props.role &&
+                    !this.props.role && !this.props.game &&
                     <div className="uuidfull">
                         <div className="qrcodebox">
                             <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
@@ -378,7 +381,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    this.props.role &&
+                    this.props.role && !this.props.game &&
                     <div className="full" style={bgStyle}>
                         <div className="header">
                             <div className="headersidebox">
