@@ -67,8 +67,8 @@ export const init = () => {
             //5、根据deviceRole获取绑定屏幕的role
             if (deviceRole)
                 role = deviceRole.get('role');
-                
-            console.log(`screen:init:role:${JSON.stringify(role)}`);
+
+            console.log(`screen:init:role:${role && role.get('name')}`);
             //6、根据device获取game
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
@@ -122,12 +122,9 @@ export const subscribeDevice = (device) => {
                 if (game) {
                     game.fetch().then(function (game) {
                         console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
-                        game.get('role').fetch().then(function (role) {
-                            dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: game, role });
-                        }).catch(function (error) {
-                            dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: game });
-                        })
+                        dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: game });
                     });
+
                 } else {
                     dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: null });
                 }
@@ -171,11 +168,7 @@ export const subscribeGame = (game) => {
         });
         sGame.on('update', (g) => {
             console.log(`subscribeGame:game updated:${g.get('title')} pauseTime:${g.get('pauseTime')}`);
-            game.get('role').fetch().then(function (role) {
-                dispatch({ type: S_GAME_UPDATED, updateGame: g, role })
-            }).catch(function (error) {
-                dispatch({ type: S_GAME_UPDATED, updateGame: g })
-            });
+            dispatch({ type: S_GAME_UPDATED, updateGame: g })
         });
         sGame.on('close', () => {
             console.log('subscribeGame:closed');
