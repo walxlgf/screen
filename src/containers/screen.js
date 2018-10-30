@@ -388,7 +388,8 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    !this.props.game && !this.props.role && <div className="uuidfull">
+                    (!this.props.game && !this.props.role) &&
+                    <div className="uuidfull">
                         <div className="qrcodebox">
                             <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
                         </div>
