@@ -1,10 +1,14 @@
 import Parse from 'parse';
+import QRCode from 'qrcode';
 import { appId, serverURL, liveQueryServerURL, masterKey } from '../config'
 
 
 export const AUTHENTICATED = "AUTHENTICATED";//已经完成验证
 
 export const DEVICE_CREATED = "DEVICE_CREATED";//已经创建完device
+
+
+export const SET_QRCODE = "SET_QRCODE";//已经创建完device
 
 
 export const DEVICE_DESTROY = "DEVICE_DESTROY";//监听到删除
@@ -57,6 +61,11 @@ export const init = () => {
         }).then(function (d) {
             console.log(`screen:init:device:${d && d.get('uuid')}`);
             device = d;
+            QRCode.toDataURL(device.get('uuid')).then(url => {
+                dispatch({ type: SET_QRCODE, qrcodeUrl: url });
+            }).catch(err => {
+                console.log(`screen:screen:QRCode:err:${err}`);
+            })
             //4、根据device获取deviceRole
             let DeviceRole = Parse.Object.extend("DeviceRole");
             let query = new Parse.Query(DeviceRole);

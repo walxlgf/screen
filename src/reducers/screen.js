@@ -2,10 +2,9 @@
 import {
     AUTHENTICATED,
     DEVICE_CREATED,
-    S_DEVICE_OPENED, S_DEVICE_CLOSED,
-    S_DEVICE_UPDATED, S_DEVICE_DELETED,
-    S_GAME_OPENED, S_GAME_CLOSED,
-    S_GAME_UPDATED, S_GAME_DELETED,
+    SET_QRCODE,
+    S_DEVICE_UPDATED,
+    S_GAME_UPDATED
 } from '../actions/screen'
 
 const initialState = {
@@ -33,6 +32,12 @@ export function screen(state = initialState, action) {
                 deviceGame: action.deviceGame,
                 game: action.deviceGame,
                 role: action.role,
+            }
+        }
+        case SET_QRCODE: {
+            return {
+                ...state,
+                qrcodeUrl: action.qrcodeUrl,
             }
         }
 

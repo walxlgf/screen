@@ -1,6 +1,5 @@
 import React from 'react';
 import Marquee from 'react-smooth-marquee';
-import QRCode from 'qrcode';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
@@ -29,16 +28,6 @@ class ViewGame extends React.Component {
         console.log(`screen:componentDidMount`);
         //初始化 用screen登录 监听 devices
         this.props.init();
-        let device = this.props.device;
-        if (device) {
-            console.log(`screen:componentDidMount:device:${device.get('uuid')}`);
-            QRCode.toDataURL(device.get('uuid')).then(url => {
-                this.setState({ qrcodeUrl: url });
-                console.log(`screen:QRCode:url:${url}`);
-            }).catch(err => {
-                console.log(`screen:QRCode:err:${err}`);
-            })
-        }
 
 
     }
@@ -49,14 +38,6 @@ class ViewGame extends React.Component {
         if (!this.props.device && nextProps.device) {
             console.log(`screen:componentWillReceiveProps:uuid:${nextProps.device.get('uuid')}`);
             this.props.subscribeDevice(nextProps.device);
-
-            QRCode.toDataURL(nextProps.device.get('uuid')).then(url => {
-                this.setState({ qrcodeUrl: url });
-                console.log(`screen:QRCode:url:${url}`);
-            }).catch(err => {
-                console.log(`screen:QRCode:err:${err}`);
-            })
-
         }
         //监听比赛
         if (nextProps.game) {
@@ -281,11 +262,6 @@ class ViewGame extends React.Component {
         let nextBlind = '--';
         let currentLevel = '--';
 
-        //各种状态的样式  未开始 正常 暂停  休息中 已经结束 等状态通过这个样式来区别
-        // let rbg = 'rbg';
-        // let roundbox2 = "roundbox2 ";
-        // let nextroundbox2 = "nextroundbox2 ";
-
         let statusChs;
         let statusEng;
 
@@ -389,7 +365,7 @@ class ViewGame extends React.Component {
                     !this.props.role &&
                     <div className="uuidfull">
                         <div className="qrcodebox">
-                            <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
+                            <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
                         </div>
                     </div>
                 }
@@ -590,6 +566,7 @@ function mapStateToProps(state) {
         role: state.screen.role,
         user: state.screen.user,
         device: state.screen.device,
+        qrcodeUrl: state.screen.qrcodeUrl,
         deleted: state.screen.deleted,
         error: state.screen.error,
     };
