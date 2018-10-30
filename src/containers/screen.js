@@ -381,7 +381,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    this.props.role &&
+                    (this.props.role && !this.props.game) &&
                     <div className="full" style={bgStyle}>
                         <div className="header">
                             <div className="headersidebox">
