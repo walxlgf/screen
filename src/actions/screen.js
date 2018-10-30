@@ -67,7 +67,8 @@ export const init = () => {
             //5、根据deviceRole获取绑定屏幕的role
             if (deviceRole)
                 role = deviceRole.get('role');
-            console.log(`screen:init:role:${role && role.get('name')}`);
+                
+            console.log(`screen:init:role:${JSON.stringify(role)}`);
             //6、根据device获取game
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
