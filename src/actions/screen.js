@@ -55,7 +55,7 @@ export const init = () => {
                 return query.first();
             }
         }).then(function (d) {
-            console.log(`screen:init:device:${device && device.get('uuid')}`);
+            console.log(`screen:init:device:${d && d.get('uuid')}`);
             device = d;
             //4、根据device获取deviceRole
             let DeviceRole = Parse.Object.extend("DeviceRole");
@@ -91,7 +91,7 @@ export const init = () => {
                 device.save().then(function (device) {
                     console.log(`screen:device:${JSON.stringify(device)}`)
                     if (device) {
-                        dispatch({ type: DEVICE_CREATED, device });
+                        dispatch({ type: DEVICE_CREATED, device, role });
                     }
                 }, function (error) {
                     console.log(`screen:error:${JSON.stringify(error)}`)
