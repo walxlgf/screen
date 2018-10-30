@@ -370,7 +370,7 @@ class ViewGame extends React.Component {
         return (
             <div>
                 {
-                    !this.props.game && <div className="uuidfull">
+                    !this.props.game && !this.props.role && <div className="uuidfull">
                         {/* <div className="uuidbox">
                            <div className="uuid" >{uuid}</div>
                             <div className="uuiddesc">请在小程序比赛中输入[{uuid}]绑定比赛.</div>
@@ -378,6 +378,10 @@ class ViewGame extends React.Component {
                         <div className="qrcodebox">
                             <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
                         </div>
+                    </div>
+                }
+                {
+                    !this.props.game && this.props.role && <div className="full" style={bgStyle}>
                     </div>
                 }
                 {

@@ -24,21 +24,29 @@ export const S_GAME_DELETED = "S_GAME_DELETED";//监听到删除
 
 
 
+/**
+ * 1、用screenuser登录
+ * 2、根据user的sessionToken获取session
+ * 3、根据installationId获取device
+ * 4、根据device获取deviceRole
+ * 5、根据deviceRole获取绑定屏幕的role
+ * 6、根据device获取game
+ */
 export const init = () => {
     return dispatch => {
         let installationId;
-        //首先登录
-        //获取session对象
+        let device;
+        let role;
+        //1、用screenuser登录
         Parse.User.logIn('screenuser', '1').then(function (user) {
             let sessionToken = user.getSessionToken();
             console.log(`screen:init:user:sessionToken:${JSON.stringify(sessionToken)}`);
+            //2、根据user的sessionToken获取session
             let query = new Parse.Query(Parse.Session);
             query.equalTo('sessionToken', sessionToken);
             return query.first();
-
         }).then(function (session) {
-            //根据session获取installationId
-            //根据installationId获取device
+            //3、根据installationId获取device
             if (session) {
                 installationId = session.get('installationId');
                 console.log(`screen:init:installationId:${JSON.stringify(installationId)}`);
@@ -46,8 +54,21 @@ export const init = () => {
                 query.equalTo('installationId', installationId);
                 return query.first();
             }
-        }).then(function (device) {
-            console.log(`screen:init:device:${device}`);
+        }).then(function (d) {
+            device = d;
+            //4、根据device获取deviceRole
+            let DeviceRole = Parse.Object.extend("DeviceRole");
+            let query = new Parse.Query(DeviceRole);
+            query.equalTo('device', device);
+            query.include('role');
+            return query.first();
+
+        }).then(function (deviceRole) {
+            //5、根据deviceRole获取绑定屏幕的role
+            role = deviceRole.get('role');
+            console.log(`screen:init:device:${device && device.get('uuid')}`);
+
+            //6、根据device获取game
             //如果有值  说明此设备已经有了 获取
             //如果没值  创建
             if (device) {
@@ -57,14 +78,10 @@ export const init = () => {
                 if (game) {
                     game.fetch().then(function (game) {
                         console.log(`screen:init::game:title:${game.id}`);
-                        game.get('role').fetch().then(function (role) {
-                            dispatch({ type: DEVICE_CREATED, device, deviceGame: game, role });
-                        }).catch(function (error) {
-                            dispatch({ type: DEVICE_CREATED, device, deviceGame: game });
-                        });
+                        dispatch({ type: DEVICE_CREATED, device, deviceGame: game, role });
                     });
                 } else {
-                    dispatch({ type: DEVICE_CREATED, device, deviceGame: null });
+                    dispatch({ type: DEVICE_CREATED, device, deviceGame: null, role });
                 }
             } else {
                 let Device = Parse.Object.extend('Device');
