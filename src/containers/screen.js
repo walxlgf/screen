@@ -556,6 +556,7 @@ function mapStateToProps(state) {
     return {
         isAuthenticated: state.screen.isAuthenticated,
         game: state.screen.game,
+        role: state.screen.role,
         user: state.screen.user,
         device: state.screen.device,
         deleted: state.screen.deleted,
