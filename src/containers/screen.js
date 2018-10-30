@@ -370,14 +370,28 @@ class ViewGame extends React.Component {
         return (
             <div>
                 {
-                    !this.props.game && !this.props.role && <div className="uuidfull">
-                        <div className="qrcodebox">
-                            <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
+                    (this.props.role && !this.props.game) &&
+                    <div className="full" style={bgStyle}>
+                        <div className="header">
+                            <div className="headersidebox">
+                                <img src={icon}></img>
+                            </div>
+                            <div className="headercenterbox">
+                                <div className="title">Hulu计时器</div>
+                            </div>
+                            <div className="headersidebox">
+                                <div className="gameuuidbox">
+                                    <div className="gameuuid">编码:{uuid}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 }
                 {
-                    !this.props.game && this.props.role && <div className="full" style={bgStyle}>
+                    !this.props.game && !this.props.role && <div className="uuidfull">
+                        <div className="qrcodebox">
+                            <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
+                        </div>
                     </div>
                 }
                 {
