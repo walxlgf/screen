@@ -370,7 +370,15 @@ class ViewGame extends React.Component {
         return (
             <div>
                 {
-                    (this.props.role && !this.props.game) &&
+                    !this.props.role &&
+                    <div className="uuidfull">
+                        <div className="qrcodebox">
+                            <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
+                        </div>
+                    </div>
+                }
+                {
+                    this.props.role &&
                     <div className="full" style={bgStyle}>
                         <div className="header">
                             <div className="headersidebox">
@@ -384,14 +392,6 @@ class ViewGame extends React.Component {
                                     <div className="gameuuid">编码:{uuid}</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                }
-                {
-                    (!this.props.game && !this.props.role) &&
-                    <div className="uuidfull">
-                        <div className="qrcodebox">
-                            <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
                         </div>
                     </div>
                 }
