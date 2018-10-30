@@ -373,7 +373,7 @@ class ViewGame extends React.Component {
         return (
             <div>
                 {
-                    !this.props.role && !this.props.game &&
+                    !this.props.role &&
                     <div className="uuidfull">
                         <div className="qrcodebox">
                             <img className="uuidqrcode" src={this.state.qrcodeUrl}></img>
@@ -381,7 +381,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    this.props.role && !this.props.game &&
+                    this.props.role &&
                     <div className="full" style={bgStyle}>
                         <div className="header">
                             <div className="headersidebox">
