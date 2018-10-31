@@ -360,8 +360,19 @@ class ViewGame extends React.Component {
 
         return (
             <div>
+
                 {
-                    !this.props.role &&
+                    this.state.showQrcodeUrl &&
+                    <div className="uuidfull">
+                        <div className="qrcodebox" onClick={v => {
+                            this.setState({ showQrcodeUrl: !this.state.showQrcodeUrl })
+                        }}>
+                            <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
+                        </div>
+                    </div>
+                }
+                {
+                    (!this.state.showQrcodeUrl && !this.props.role) &&
                     <div className="uuidfull">
                         <div className="qrcodebox">
                             <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
@@ -369,7 +380,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    (this.props.role && !this.props.game) &&
+                    (!this.state.showQrcodeUrl && this.props.role && !this.props.game) &&
                     <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
                         <div className="header">
                             <div className="headersidebox">
@@ -387,7 +398,8 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    this.props.game && <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
+                    (!this.state.showQrcodeUrl && this.props.game) &&
+                    <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
 
                         <div className="header">
                             <div className="headersidebox">
@@ -402,12 +414,6 @@ class ViewGame extends React.Component {
                                     this.setState({ showQrcodeUrl: !this.state.showQrcodeUrl })
                                 }}>
                                     <div className="gameuuid">编码:{uuid}</div>
-                                    {
-                                        this.state.showQrcodeUrl &&
-                                        <div className="qrcodebox">
-                                            <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
-                                        </div>
-                                    }
                                 </div>
                             </div>
                         </div>
