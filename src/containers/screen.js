@@ -280,18 +280,14 @@ class ViewGame extends React.Component {
         let subTitle = '';
 
         let icon;
-        let bgStyle = {
-            backgroundImage: `url("../images/bg.jpg")`
-        };
+        let bg = `url("../images/bg.jpg")`;
 
         //
         let role = this.props.role;
         if (role) {
             icon = role.get('icon');
             if (role.get('bg'))
-                bgStyle = {
-                    backgroundImage: `url("${role.get('bg')}")`
-                };
+                bg = role.get('bg');
         }
 
         if (!this.props.game) {
@@ -375,7 +371,7 @@ class ViewGame extends React.Component {
                 }
                 {
                     (this.props.role && !this.props.game) &&
-                    <div className="full" style={bgStyle}>
+                    <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
                         <div className="header">
                             <div className="headersidebox">
                                 <img src={icon}></img>
@@ -392,7 +388,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    this.props.game && <div className="full" style={bgStyle}>
+                    this.props.game && <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
 
                         <div className="header">
                             <div className="headersidebox">
