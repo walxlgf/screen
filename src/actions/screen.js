@@ -28,6 +28,18 @@ export const S_GAME_DELETED = "S_GAME_DELETED";//监听到删除
 
 
 
+
+export const S_ROLE_OPENED = "S_ROLE_OPENED";//监听已成功打开
+export const S_ROLE_CLOSED = "S_ROLE_CLOSED";//设置监听 取消监听
+
+export const S_ROLE_CREATED = "S_ROLE_CREATED";//监听到新增
+export const S_ROLE_DELETED = "S_ROLE_DELETED";//监听到删除
+
+
+
+
+
+
 /**
  * 1、用screenuser登录
  * 2、根据user的sessionToken获取session
@@ -147,18 +159,8 @@ export const subscribeDevice = (device) => {
     }
 }
 
-export const unsubscribeDevice = (device) => {
+export const unsubscribeDevice = () => {
     return dispatch => {
-        if (device) {
-            device.destroy()
-                .then(function (game) {
-                    dispatch({ type: DEVICE_DESTROY });
-                    console.log('unsubscribeDevice:device.destroy():');
-                }, function (error) {
-                    console.log('unsubscribeDevice:device.destroy():', error);
-                });
-        }
-
         if (sDevice) {
             sDevice.unsubscribe();
         }
@@ -191,6 +193,45 @@ export const unsubscribeGame = () => {
     return dispatch => {
         if (sGame) {
             sGame.unsubscribe();
+        }
+    }
+}
+
+
+let sDeviceRole;
+export const subscribeRole = (device) => {
+    return dispatch => {
+        let query = new Parse.Query('DeviceRole');
+        query.equalTo('device', device);
+        sDeviceRole = query.subscribe();
+        sDeviceRole.on('open', () => {
+            console.log(`subscribeRole:opened`);
+            dispatch({ type: S_ROLE_OPENED });
+        });
+        sDeviceRole.on('create', (deviceRole) => {
+            let device = deviceRole.get('device');
+            let role = deviceRole.get('role');
+            console.log(`subscribeRole:create:deviceRole:${device && device.get('uuid')}`);
+            dispatch({ type: S_ROLE_CREATED, role });
+        });
+        sDeviceRole.on('delete', (deviceRole) => {
+            let device = deviceRole.get('device');
+            let role = deviceRole.get('role');
+            console.log(`subscribeRole:delete:deviceRole:${device && device.get('uuid')}`);
+            dispatch({ type: S_ROLE_DELETED, role });
+        });
+        sDeviceRole.on('close', () => {
+            console.log('subscribeRole:closed');
+            dispatch({ type: S_ROLE_CLOSED });
+        });
+
+    }
+}
+
+export const unsubscribeRole = () => {
+    return dispatch => {
+        if (sDeviceRole) {
+            sDeviceRole.unsubscribe();
         }
     }
 }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { lchmod } from 'fs';
 import { formatShortDate } from '../utils';
-import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame } from '../actions/screen';
+import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
 import { formatCountdown } from '../utils';
 class ViewGame extends React.Component {
@@ -37,9 +37,13 @@ class ViewGame extends React.Component {
         console.log(`screen:componentWillReceiveProps:this.props.device:${this.props.device && this.props.device.get('uuid')} nextProps.device:${nextProps.device && nextProps.device.get('uuid')}`);
         if (!this.props.device && nextProps.device) {
             this.props.subscribeDevice(nextProps.device);
+            this.props.subscribeRole(nextProps.device);
+        }
+        console.log(`screen:componentWillReceiveProps:this.props.role:${this.props.role && this.props.role.get('name')} nextProps.role:${nextProps.role && nextProps.role.get('name')}`);
+        if (this.props.role && !nextProps.role) {
+            this.props.unsubscribeRole();
         }
         console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('uuid')}`);
-        
         //监听比赛
         if (nextProps.game) {
             console.log(`screen:componentWillReceiveProps：game`);
@@ -66,7 +70,8 @@ class ViewGame extends React.Component {
 
     componentWillUnmount() {
         console.log(`screen:componentWillUnmount`);
-        this.props.unsubscribeDevice(this.props.device);
+        this.props.unsubscribeDevice();
+        this.props.unsubscribeRole();
         this.props.unsubscribeGame();
         if (this.interval) {
             clearInterval(this.interval);
@@ -580,7 +585,10 @@ function mapDispatchToProps(dispatch) {
         unsubscribeDevice: bindActionCreators(unsubscribeDevice, dispatch),
         subscribeGame: bindActionCreators(subscribeGame, dispatch),
         unsubscribeGame: bindActionCreators(unsubscribeGame, dispatch),
+        subscribeRole: bindActionCreators(subscribeRole, dispatch),
+        unsubscribeRole: bindActionCreators(unsubscribeRole, dispatch),
     }
+}
 }
 
 export default withRouter(

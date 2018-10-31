@@ -4,7 +4,9 @@ import {
     DEVICE_CREATED,
     SET_QRCODE,
     S_DEVICE_UPDATED,
-    S_GAME_UPDATED
+    S_GAME_UPDATED,
+    S_ROLE_CREATED,
+    S_ROLE_DELETED
 } from '../actions/screen'
 
 const initialState = {
@@ -61,6 +63,18 @@ export function screen(state = initialState, action) {
             return {
                 ...state,
                 game: game,
+            }
+        }
+        case S_ROLE_CREATED: {
+            return {
+                ...state,
+                role: action.role,
+            }
+        }
+        case S_ROLE_DELETED: {
+            return {
+                ...state,
+                role: null,
             }
         }
         default:
