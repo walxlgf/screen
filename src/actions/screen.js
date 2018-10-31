@@ -204,27 +204,23 @@ export const subscribeRole = (device) => {
     return dispatch => {
         console.log(`subscribeRole:device:${device && device.get('uuid')}`);
         let query = new Parse.Query('DeviceRole');
-        // query.equalTo('device', device);
+        query.equalTo('device', device);
         sDeviceRole = query.subscribe();
         sDeviceRole.on('open', () => {
             console.log(`subscribeRole:opened`);
             dispatch({ type: S_ROLE_OPENED });
         });
         sDeviceRole.on('create', (deviceRole) => {
-            let d = deviceRole.get('device');
-            if (d && device.get('uuid') == d.get('uuid')) {
-                let role = deviceRole.get('role');
-                console.log(`subscribeRole:create:deviceRole:${device && device.get('uuid')}`);
-                dispatch({ type: S_ROLE_CREATED, role });
-            }
+            let device = deviceRole.get('device');
+            let role = deviceRole.get('role');
+            console.log(`subscribeRole:create:deviceRole:${device && device.get('uuid')}`);
+            dispatch({ type: S_ROLE_CREATED, role });
         });
         sDeviceRole.on('delete', (deviceRole) => {
-            let d = deviceRole.get('device');
-            if (d && device.get('uuid') == d.get('uuid')) {
-                let role = deviceRole.get('role');
-                console.log(`subscribeRole:delete:deviceRole:${device && device.get('uuid')}`);
-                dispatch({ type: S_ROLE_DELETED, role });
-            }
+            let device = deviceRole.get('device');
+            let role = deviceRole.get('role');
+            console.log(`subscribeRole:delete:deviceRole:${device && device.get('uuid')}`);
+            dispatch({ type: S_ROLE_DELETED, role });
         });
         sDeviceRole.on('close', () => {
             console.log('subscribeRole:closed');

@@ -11,11 +11,11 @@ import {
 
 const initialState = {
     isAuthenticated: false,
-    user: null,
-    device: null,
-    deviceGame: null,//从device对象中获取的Game
-    updateGame: null,//liveQuery update过来的game
-    game: null,//倒计时的game
+    user: undefined,
+    device: undefined,
+    deviceGame: undefined,//从device对象中获取的Game
+    updateGame: undefined,//liveQuery update过来的game
+    game: undefined,//倒计时的game
 };
 
 export function screen(state = initialState, action) {
@@ -55,7 +55,7 @@ export function screen(state = initialState, action) {
         case S_GAME_UPDATED: {
             let game = state.game;
             if (!state.deviceGame) {
-                game = null;
+                game = undefined;
             } else {
                 game = action.updateGame;
             }
@@ -74,7 +74,7 @@ export function screen(state = initialState, action) {
         case S_ROLE_DELETED: {
             return {
                 ...state,
-                role: null,
+                role: undefined,
             }
         }
         default:
