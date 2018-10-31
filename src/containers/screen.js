@@ -33,12 +33,13 @@ class ViewGame extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(`screen:componentWillReceiveProps：`);
         //device创建完毕 监听device列表  根据uuid生成二维码qrcode
-        // if (!this.props.device && nextProps.device) {
-        //     console.log(`screen:componentWillReceiveProps:uuid:${nextProps.device.get('uuid')}`);
-        //     this.props.subscribeDevice(nextProps.device);
-        // }
+        console.log(`screen:componentWillReceiveProps:this.props.device:${this.props.device && this.props.device.get('uuid')} nextProps.device:${nextProps.device && nextProps.device.get('uuid')}`);
+        if (!this.props.device && nextProps.device) {
+            this.props.subscribeDevice(nextProps.device);
+        }
+        console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('uuid')}`);
+        
         //监听比赛
         if (nextProps.game) {
             console.log(`screen:componentWillReceiveProps：game`);

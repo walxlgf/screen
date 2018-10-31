@@ -68,7 +68,6 @@ export const init = () => {
                 }).catch(err => {
                     console.log(`screen:screen:QRCode:err:${err}`);
                 })
-                this.subscribeDeviceInner(d);
             }
             //4、根据device获取deviceRole
             let DeviceRole = Parse.Object.extend("DeviceRole");
@@ -118,36 +117,6 @@ export const init = () => {
 }
 
 let sDevice;
-function subscribeDeviceInner(device){
-
-    let query = new Parse.Query('Device');
-    query.equalTo('installationId', device.get('installationId'))
-    sDevice = query.subscribe();
-    sDevice.on('open', () => {
-        console.log(`subscribeDevice:opened`);
-        dispatch({ type: S_DEVICE_OPENED });
-    });
-    sDevice.on('update', (d) => {
-        console.log(`subscribeDevice:device updated:${JSON.stringify(d.get('uuid'))}`);
-        if (device.id === d.id) {
-            let game = d.get('game');
-            //有game 
-            if (game) {
-                game.fetch().then(function (game) {
-                    console.log(`subscribeDevice:game:title:${JSON.stringify(game.get('title'))}`);
-                    dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: game });
-                });
-
-            } else {
-                dispatch({ type: S_DEVICE_UPDATED, device: d, deviceGame: null });
-            }
-        }
-    });
-    sDevice.on('close', () => {
-        console.log('subscribeDevice:closed');
-        dispatch({ type: S_DEVICE_CLOSED });
-    });
-}
 export const subscribeDevice = (device) => {
     return dispatch => {
         let query = new Parse.Query('Device');
