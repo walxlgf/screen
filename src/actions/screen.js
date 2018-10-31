@@ -94,7 +94,8 @@ export const init = () => {
                         dispatch({ type: DEVICE_CREATED, device, deviceGame: game, role });
                     });
                 } else {
-                    dispatch({ type: DEVICE_CREATED, device, deviceGame: null, role });
+                    console.log(`screen:init:game is null`);
+                    dispatch({ type: DEVICE_CREATED, device, deviceGame: null, role: role });
                 }
             } else {
                 let Device = Parse.Object.extend('Device');
@@ -102,16 +103,14 @@ export const init = () => {
                 device.set('installationId', installationId);
                 //获取新建的device
                 device.save().then(function (device) {
-                    console.log(`screen:device:${JSON.stringify(device)}`)
+                    console.log(`screen:init:created:device:${device && device.get('uuid')}`)
                     if (device) {
-                        dispatch({ type: DEVICE_CREATED, device, role });
+                        dispatch({ type: DEVICE_CREATED, device, role: role });
                     }
-                }, function (error) {
-                    console.log(`screen:error:${JSON.stringify(error)}`)
                 });
             }
-        }).catch( function (error) {
-            console.log(`screen:error:${JSON.stringify(error)}`)
+        }).catch(function (error) {
+            console.log(`screen:init:error:${JSON.stringify(error)}`)
         });
     }
 }
