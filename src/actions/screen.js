@@ -31,7 +31,8 @@ export const S_GAME_DELETED = "S_GAME_DELETED";//监听到删除
 /**
  * 1、用screenuser登录
  * 2、根据user的sessionToken获取session
- * 3、根据installationId获取device
+ * 3、根据installationId获取device 然后
+ * 
  * 4、根据device获取deviceRole
  * 5、根据deviceRole获取绑定屏幕的role
  * 6、根据device获取game
@@ -60,12 +61,15 @@ export const init = () => {
             }
         }).then(function (d) {
             console.log(`screen:init:device:${d && d.get('uuid')}`);
-            device = d;
-            QRCode.toDataURL(device.get('uuid')).then(url => {
-                dispatch({ type: SET_QRCODE, qrcodeUrl: url });
-            }).catch(err => {
-                console.log(`screen:screen:QRCode:err:${err}`);
-            })
+            if (d) {
+                device = d;
+                QRCode.toDataURL(device.get('uuid')).then(url => {
+                    dispatch({ type: SET_QRCODE, qrcodeUrl: url });
+                }).catch(err => {
+                    console.log(`screen:screen:QRCode:err:${err}`);
+                })
+                this.subscribeDevice(d);
+            }
             //4、根据device获取deviceRole
             let DeviceRole = Parse.Object.extend("DeviceRole");
             let query = new Parse.Query(DeviceRole);
