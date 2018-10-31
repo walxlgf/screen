@@ -86,15 +86,13 @@ export const init = () => {
             //如果没值  创建
             if (device) {
                 let game = device.get('game');
-                console.log(`screen:init:game:${game.id}`);
+                console.log(`screen:init:game:${game && game.id}`);
                 //有game 
                 if (game) {
                     game.fetch().then(function (game) {
-                        console.log(`screen:init::game:title:${game.id}`);
                         dispatch({ type: DEVICE_CREATED, device, deviceGame: game, role });
                     });
                 } else {
-                    console.log(`screen:init:game is null`);
                     dispatch({ type: DEVICE_CREATED, device, deviceGame: null, role: role });
                 }
             } else {
