@@ -9,6 +9,7 @@ import {
     S_ROLE_DELETED
 } from '../actions/screen'
 
+
 const initialState = {
     isAuthenticated: false,
     user: undefined,
@@ -17,6 +18,7 @@ const initialState = {
     updateGame: undefined,//liveQuery update过来的game
     game: undefined,//倒计时的game
 };
+
 
 export function screen(state = initialState, action) {
     switch (action.type) {
@@ -51,7 +53,6 @@ export function screen(state = initialState, action) {
                 game: action.deviceGame,
             }
         }
-
         case S_GAME_UPDATED: {
             let game = state.game;
             if (!state.deviceGame) {

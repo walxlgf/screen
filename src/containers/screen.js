@@ -41,7 +41,7 @@ class ViewGame extends React.Component {
         }
         console.log(`screen:componentWillReceiveProps:this.props.role:${this.props.role && this.props.role.get('name')} nextProps.role:${nextProps.role && nextProps.role.get('name')}`);
         // if (this.props.role && !nextProps.role) {
-            // this.props.unsubscribeRole();
+        // this.props.unsubscribeRole();
         // }
         console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('uuid')}`);
         //监听比赛
@@ -278,9 +278,8 @@ class ViewGame extends React.Component {
         let rewardPlayers = '--';
         let title = '';
         let subTitle = '';
-        let icon = '';
-        let bg = '';
 
+        let icon;
         let bgStyle = {
             backgroundImage: `url("../images/bg.jpg")`
         };
@@ -289,10 +288,9 @@ class ViewGame extends React.Component {
         let role = this.props.role;
         if (role) {
             icon = role.get('icon');
-            bg = role.get('bg');
-            if (bg)
+            if (role.get('bg'))
                 bgStyle = {
-                    backgroundImage: `url("${bg}")`
+                    backgroundImage: `url("${role.get('bg')}")`
                 };
         }
 
