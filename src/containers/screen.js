@@ -40,7 +40,7 @@ class ViewGame extends React.Component {
             this.props.subscribeRole(nextProps.device);
         }
         console.log(`screen:componentWillReceiveProps:this.props.role:${this.props.role && this.props.role.get('name')} nextProps.role:${nextProps.role && nextProps.role.get('name')}`);
-        if (!this.props.role && nextProps.role) {
+        if (this.props.role && !nextProps.role) {
             this.props.unsubscribeRole();
         }
         console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('uuid')}`);
