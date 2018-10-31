@@ -3,8 +3,6 @@ import Marquee from 'react-smooth-marquee';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
-import { lchmod } from 'fs';
-import { formatShortDate } from '../utils';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
 import { formatCountdown } from '../utils';
@@ -17,6 +15,7 @@ class ViewGame extends React.Component {
             currentRoundIndex: -1,//当前正在运行round的index
             countdown: '',//倒计时字符串
             status: '',//比赛状态 'before' 'gaming' 'after'
+            showQrcodeUrl: false,
         };
     }
 
@@ -379,7 +378,7 @@ class ViewGame extends React.Component {
                             <div className="headercenterbox">
                                 <div className="title">Hulu计时器</div>
                             </div>
-                            <div className="headersidebox">
+                            <div className="headersidebox" >
                                 <div className="gameuuidbox">
                                     <div className="gameuuid">编码:{uuid}</div>
                                 </div>
@@ -399,8 +398,16 @@ class ViewGame extends React.Component {
                                 <div className="subTitle">{subTitle}</div>
                             </div>
                             <div className="headersidebox">
-                                <div className="gameuuidbox">
+                                <div className="gameuuidbox" onClick={v => {
+                                    this.setState({ showQrcodeUrl: !this.state.showQrcodeUrl })
+                                }}>
                                     <div className="gameuuid">编码:{uuid}</div>
+                                    {
+                                        this.state.showQrcodeUrl &&
+                                        <div className="qrcodebox">
+                                            <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
