@@ -255,8 +255,7 @@ class ViewGame extends React.Component {
 
 
     }
-
-    onShowQrClicked = (e) => {
+    onShowQrClicked = () => {
         this.setState({ showQrcodeUrl: !this.state.showQrcodeUrl })
     }
 
@@ -368,7 +367,7 @@ class ViewGame extends React.Component {
                 {
                     this.state.showQrcodeUrl &&
                     <div className="uuidfull">
-                        <div className="qrcodebox" onClick={this.onShowQrClicked()}>
+                        <div className="qrcodebox" onClick={this.onShowQrClicked}>
                             <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
                         </div>
                     </div>
@@ -391,7 +390,7 @@ class ViewGame extends React.Component {
                             <div className="headercenterbox">
                                 <div className="title">Hulu计时器</div>
                             </div>
-                            <div className="headersidebox" onClick={this.onShowQrClicked()}>
+                            <div className="headersidebox" onClick={this.onShowQrClicked}>
                                 <div className="gameuuidbox">
                                     <div className="gameuuid">编码:{uuid}</div>
                                 </div>
@@ -412,7 +411,7 @@ class ViewGame extends React.Component {
                                 <div className="subTitle">{subTitle}</div>
                             </div>
                             <div className="headersidebox">
-                                <div className="gameuuidbox" onClick={this.onShowQrClicked()}>
+                                <div className="gameuuidbox" onClick={this.onShowQrClicked}>
                                     <div className="gameuuid">编码:{uuid}</div>
                                 </div>
                             </div>
