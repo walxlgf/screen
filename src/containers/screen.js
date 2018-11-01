@@ -15,7 +15,7 @@ class ViewGame extends React.Component {
             currentRoundIndex: -1,//当前正在运行round的index
             countdown: '',//倒计时字符串
             status: '',//比赛状态 'before' 'gaming' 'after'
-            showQrcodeUrl: false,
+            showQrcode: false,//单击显示二维码开关
         };
     }
 
@@ -39,9 +39,18 @@ class ViewGame extends React.Component {
             this.props.subscribeRole(nextProps.device);
         }
         console.log(`screen:componentWillReceiveProps:this.props.role:${this.props.role && this.props.role.get('name')} nextProps.role:${nextProps.role && nextProps.role.get('name')}`);
-        // if (this.props.role && !nextProps.role) {
-        // this.props.unsubscribeRole();
-        // }
+        //如果正在显示二维码的过程中有role改变 不显示
+        if (this.state.showQrcode) {
+            if (!nextProps.role) {
+                this.setState({ showQrcode: false });
+            } else {
+                if (this.props.role && this.props.role.id == nextProps.role.id) {
+
+                } else {
+                    this.setState({ showQrcode: false });
+                }
+            }
+        }
         console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('uuid')}`);
         //监听比赛
         if (nextProps.game) {
@@ -256,7 +265,7 @@ class ViewGame extends React.Component {
 
     }
     onShowQrClicked = () => {
-        this.setState({ showQrcodeUrl: !this.state.showQrcodeUrl })
+        this.setState({ showQrcode: !this.state.showQrcode })
     }
 
     render() {
@@ -365,7 +374,7 @@ class ViewGame extends React.Component {
             <div>
 
                 {
-                    this.state.showQrcodeUrl &&
+                    this.state.showQrcode &&
                     <div className="uuidfull">
                         <div className="qrcodebox" onClick={this.onShowQrClicked}>
                             <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
@@ -373,7 +382,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    (!this.state.showQrcodeUrl && !this.props.role) &&
+                    (!this.state.showQrcode && !this.props.role) &&
                     <div className="uuidfull">
                         <div className="qrcodebox">
                             <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
@@ -381,7 +390,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    (!this.state.showQrcodeUrl && this.props.role && !this.props.game) &&
+                    (!this.state.showQrcode && this.props.role && !this.props.game) &&
                     <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
                         <div className="header">
                             <div className="headersidebox">
@@ -399,7 +408,7 @@ class ViewGame extends React.Component {
                     </div>
                 }
                 {
-                    (!this.state.showQrcodeUrl && this.props.game) &&
+                    (!this.state.showQrcode && this.props.game) &&
                     <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
 
                         <div className="header">
