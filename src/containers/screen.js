@@ -44,10 +44,12 @@ class ViewGame extends React.Component {
             if (!nextProps.role) {
                 this.setState({ showQrcode: false });
             } else {
-                if (this.props.role && this.props.role.id == nextProps.role.id) {
-
-                } else {
+                if (!this.props.role) {
                     this.setState({ showQrcode: false });
+                } else {
+                    if (this.props.role.id !== nextProps.role.id) {
+                        this.setState({ showQrcode: false });
+                    }
                 }
             }
         }
