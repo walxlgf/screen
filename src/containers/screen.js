@@ -3,7 +3,7 @@ import Marquee from 'react-smooth-marquee';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
-import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeRole, unsubscribeRole } from '../actions/screen';
+import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole,subscribeRole,unsubscribeRole } from '../actions/screen';
 import './screen.less';
 import { formatCountdown } from '../utils';
 class ViewGame extends React.Component {
@@ -32,13 +32,16 @@ class ViewGame extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //device创建完毕 监听device列表  根据uuid生成二维码qrcode
+        //device创建完毕 监听device列表  
         console.log(`screen:componentWillReceiveProps:this.props.device:${this.props.device && this.props.device.get('uuid')} nextProps.device:${nextProps.device && nextProps.device.get('uuid')}`);
         if (!this.props.device && nextProps.device) {
             this.props.subscribeDevice(nextProps.device);
-            this.props.subscribeRole(nextProps.device);
+            this.props.subscribeDeviceRole(nextProps.device);
         }
         console.log(`screen:componentWillReceiveProps:this.props.role:${this.props.role && this.props.role.get('name')} nextProps.role:${nextProps.role && nextProps.role.get('name')}`);
+        if (!this.props.role && nextProps.role) {
+            this.props.subscribeRole(nextProps.role);
+        }
         //如果正在显示二维码的过程中有role改变 不显示
         if (this.state.showQrcode) {
             if (!nextProps.role) {
@@ -81,6 +84,7 @@ class ViewGame extends React.Component {
     componentWillUnmount() {
         console.log(`screen:componentWillUnmount`);
         this.props.unsubscribeDevice();
+        this.props.unsubscribeDeviceRole();
         this.props.unsubscribeRole();
         this.props.unsubscribeGame();
         if (this.interval) {
@@ -289,15 +293,16 @@ class ViewGame extends React.Component {
         let avgChips = '--';
         let restPlayers = '--';
         let rewardPlayers = '--';
-        let title = '';
-        let subTitle = '';
+        let gameTitle = '';
 
         let icon;
         let bg = `url("../images/bg.jpg")`;
 
         //
+        let title = '';
         let role = this.props.role;
         if (role) {
+            title = role.get('title');
             icon = role.get('icon');
             if (role.get('bg'))
                 bg = role.get('bg');
@@ -362,8 +367,7 @@ class ViewGame extends React.Component {
             let rebuyCount = game.get('rebuyCount') ? game.get('rebuyCount') : 0;
             let addonCount = game.get('addonCount') ? game.get('addonCount') : 0;
 
-            title = game.get('title');
-            subTitle = game.get('subTitle');
+            gameTitle = game.get('title');
             palyerCount = `${palyers ? palyers : '0'}/${rebuyCount ? rebuyCount : '0'}/${addonCount ? addonCount : '0'}`
             restPlayers = game.get('restPlayers') ? game.get('restPlayers') : 0;
             rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
@@ -399,7 +403,7 @@ class ViewGame extends React.Component {
                                 <img src={icon}></img>
                             </div>
                             <div className="headercenterbox">
-                                <div className="title">Hulu计时器</div>
+                                <div className="title">{title}</div>
                             </div>
                             <div className="headersidebox" onClick={this.onShowQrClicked}>
                                 <div className="gameuuidbox">
@@ -419,7 +423,7 @@ class ViewGame extends React.Component {
                             </div>
                             <div className="headercenterbox">
                                 <div className="title">{title}</div>
-                                <div className="subTitle">{subTitle}</div>
+                                <div className="gameTitle">{gameTitle}</div>
                             </div>
                             <div className="headersidebox">
                                 <div className="gameuuidbox" onClick={this.onShowQrClicked}>
@@ -602,6 +606,8 @@ function mapDispatchToProps(dispatch) {
         unsubscribeDevice: bindActionCreators(unsubscribeDevice, dispatch),
         subscribeGame: bindActionCreators(subscribeGame, dispatch),
         unsubscribeGame: bindActionCreators(unsubscribeGame, dispatch),
+        subscribeDeviceRole: bindActionCreators(subscribeDeviceRole, dispatch),
+        unsubscribeDeviceRole: bindActionCreators(unsubscribeDeviceRole, dispatch),
         subscribeRole: bindActionCreators(subscribeRole, dispatch),
         unsubscribeRole: bindActionCreators(unsubscribeRole, dispatch),
     }

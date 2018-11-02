@@ -17,23 +17,21 @@ export const DEVICE_DESTROY = "DEVICE_DESTROY";//监听到删除
 
 export const S_DEVICE_OPENED = "S_DEVICE_OPENED";//监听已成功打开
 export const S_DEVICE_CLOSED = "S_DEVICE_CLOSED";//设置监听 取消监听
-
 export const S_DEVICE_UPDATED = "S_DEVICE_UPDATED";//监听到更新
 
 export const S_GAME_OPENED = "S_GAME_OPENED";//监听已成功打开
 export const S_GAME_CLOSED = "S_GAME_CLOSED";//设置监听 取消监听
-
 export const S_GAME_UPDATED = "S_GAME_UPDATED";//监听到更新
 export const S_GAME_DELETED = "S_GAME_DELETED";//监听到删除
 
-
-
+export const S_DEVICE_ROLE_OPENED = "S_DEVICE_ROLE_OPENED";//监听已成功打开
+export const S_DEVICE_ROLE_CLOSED = "S_DEVICE_ROLE_CLOSED";//设置监听 取消监听
+export const S_DEVICE_ROLE_CREATED = "S_DEVICE_ROLE_CREATED";//监听到新增
+export const S_DEVICE_ROLE_DELETED = "S_DEVICE_ROLE_DELETED";//监听到删除
 
 export const S_ROLE_OPENED = "S_ROLE_OPENED";//监听已成功打开
 export const S_ROLE_CLOSED = "S_ROLE_CLOSED";//设置监听 取消监听
-
-export const S_ROLE_CREATED = "S_ROLE_CREATED";//监听到新增
-export const S_ROLE_DELETED = "S_ROLE_DELETED";//监听到删除
+export const S_ROLE_UPDATED = "S_ROLE_UPDATED";//监听到删除
 
 
 
@@ -199,30 +197,63 @@ export const unsubscribeGame = () => {
 
 
 let sDeviceRole;
-export const subscribeRole = (device) => {
+export const subscribeDeviceRole = (device) => {
 
     return dispatch => {
-        console.log(`subscribeRole:device:${device && device.get('uuid')}`);
+        console.log(`subscribeDeviceRole:device:${device && device.get('uuid')}`);
         let query = new Parse.Query('DeviceRole');
         query.equalTo('device', device);
         sDeviceRole = query.subscribe();
         sDeviceRole.on('open', () => {
-            console.log(`subscribeRole:opened`);
-            dispatch({ type: S_ROLE_OPENED });
+            console.log(`subscribeDeviceRole:opened`);
+            dispatch({ type: S_DEVICE_ROLE_OPENED });
         });
         sDeviceRole.on('create', (deviceRole) => {
             let device = deviceRole.get('device');
             let role = deviceRole.get('role');
-            console.log(`subscribeRole:create:deviceRole:${device && device.get('uuid')}`);
-            dispatch({ type: S_ROLE_CREATED, role });
+            console.log(`subscribeDeviceRole:create:deviceRole:${device && device.get('uuid')}`);
+            dispatch({ type: S_DEVICE_ROLE_CREATED, role });
         });
         sDeviceRole.on('delete', (deviceRole) => {
             let device = deviceRole.get('device');
             let role = deviceRole.get('role');
-            console.log(`subscribeRole:delete:deviceRole:${device && device.get('uuid')}`);
-            dispatch({ type: S_ROLE_DELETED, role });
+            console.log(`subscribeDeviceRole:delete:deviceRole:${device && device.get('uuid')}`);
+            dispatch({ type: S_DEVICE_ROLE_DELETED, role });
         });
         sDeviceRole.on('close', () => {
+            console.log('subscribeDeviceRole:closed');
+            dispatch({ type: S_DEVICE_ROLE_CLOSED });
+        });
+
+    }
+}
+
+export const unsubscribeDeviceRole = () => {
+    return dispatch => {
+        if (sDeviceRole) {
+            sDeviceRole.unsubscribe();
+        }
+    }
+}
+
+
+
+let sRole;
+export const subscribeRole = (role) => {
+    return dispatch => {
+        console.log(`subscribeRole:role:${role && role.get('name')}`);
+        let query = new Parse.Query('_Role');
+        query.equalTo('objectId', role.id);
+        sRole = query.subscribe();
+        sRole.on('open', () => {
+            console.log(`subscribeRole:opened`);
+            dispatch({ type: S_ROLE_OPENED });
+        });
+        sRole.on('update', (role) => {
+            console.log(`subscribeRole:create:role:${role && role.get('name')}`);
+            dispatch({ type: S_ROLE_UPDATED, role });
+        });
+        sRole.on('close', () => {
             console.log('subscribeRole:closed');
             dispatch({ type: S_ROLE_CLOSED });
         });
@@ -232,8 +263,8 @@ export const subscribeRole = (device) => {
 
 export const unsubscribeRole = () => {
     return dispatch => {
-        if (sDeviceRole) {
-            sDeviceRole.unsubscribe();
+        if (sRole) {
+            sRole.unsubscribe();
         }
     }
 }

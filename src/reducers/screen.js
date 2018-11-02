@@ -5,8 +5,9 @@ import {
     SET_QRCODE,
     S_DEVICE_UPDATED,
     S_GAME_UPDATED,
-    S_ROLE_CREATED,
-    S_ROLE_DELETED
+    S_DEVICE_ROLE_CREATED,
+    S_DEVICE_ROLE_DELETED,
+    S_ROLE_UPDATED
 } from '../actions/screen'
 
 
@@ -66,16 +67,22 @@ export function screen(state = initialState, action) {
                 game: game,
             }
         }
-        case S_ROLE_CREATED: {
+        case S_DEVICE_ROLE_CREATED: {
             return {
                 ...state,
                 role: action.role,
             }
         }
-        case S_ROLE_DELETED: {
+        case S_DEVICE_ROLE_DELETED: {
             return {
                 ...state,
                 role: undefined,
+            }
+        }
+        case S_ROLE_UPDATED: {
+            return {
+                ...state,
+                role: action.role,
             }
         }
         default:
