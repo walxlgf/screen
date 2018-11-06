@@ -171,15 +171,14 @@ class ViewGame extends React.Component {
         let rewards = this.state.rewardss[i];
         console.log(`screen:dealRewardInterval:index:${index}`);
         this.setState({ index: ++this.state.index, rewards })
-        for (let i = 0; i < rewards.length; i++) {
-            const reward = rewards[i];
-            marquees[i].move(0);
-            if (reward && reward.length > 30) {
-                marquees[i].start();
-            } else {
-                marquees[i].stop();
-            }
-        }
+        // for (let i = 0; i < rewards.length; i++) {
+        //     const reward = rewards[i];
+        //     if (reward && reward.length > 30) {
+        //         marquees[i].start();
+        //     } else {
+        //         marquees[i].stop();
+        //     }
+        // }
     }
 
     /**
