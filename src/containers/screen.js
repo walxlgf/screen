@@ -21,7 +21,7 @@ class ViewGame extends React.Component {
             showQrcode: false,//单击显示二维码开关
 
             //奖池相关
-            rewardss:undefined,//game.get('reward')分隔回车形成的字符串数组（5个一组）的数组
+            rewardss: undefined,//game.get('reward')分隔回车形成的字符串数组（5个一组）的数组
             rewards: undefined,//正在展示的5个
             index: -1,//第几页
         };
@@ -140,21 +140,21 @@ class ViewGame extends React.Component {
             if (rewardss)
                 rewards = rewardss[0];
 
-            this.state = {
+            this.setState({
                 rewardss,
                 rewards,
                 index: 0,
-            };
+            });
 
             if (!this.rewardInterval) {
                 this.rewardInterval = setInterval(() => this.dealRewardInterval(), 1000 * 10);
             }
         } else {
-            this.state = {
+            this.setState({
                 rewardss: undefined,
                 rewards: undefined,
                 index: -1,
-            };
+            });
         }
     }
 
@@ -360,6 +360,8 @@ class ViewGame extends React.Component {
     }
 
     render() {
+
+        let that = this;
         //如果比赛不存在 显示UUID界面
         let uuid = '--';
 
