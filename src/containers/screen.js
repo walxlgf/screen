@@ -571,7 +571,7 @@ class ViewGame extends React.Component {
                                         // </MarqueeDouble>
                                         return <Marquee
                                             className='rewardvalue'
-                                            hoverToStop={that.state.rewards[idx].length > 10}
+                                            hoverToStop={that.state.rewards[idx] && that.state.rewards[idx].length > 10}
                                             text={that.state.rewards[idx]}
                                         />
                                     })}
