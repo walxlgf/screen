@@ -553,7 +553,7 @@ class ViewGame extends React.Component {
                             }
 
                             {
-                                this.state.rewards && <div className="sidebox">{
+                                this.state.rewards && <div className="rewardsidebox">{
                                     marquees.map(function (marquee, idx) {
                                         return <MarqueeDouble className="rewardbox" key={idx}
                                             ref={(ref) => { marquees[idx] = ref }}
