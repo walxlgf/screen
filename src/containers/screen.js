@@ -20,7 +20,7 @@ class ViewGame extends React.Component {
             showQrcode: false,//单击显示二维码开关
 
             //奖池相关
-            rewardss,//game.get('reward')分隔回车形成的字符串数组（5个一组）的数组
+            rewardss:undefined,//game.get('reward')分隔回车形成的字符串数组（5个一组）的数组
             rewards: undefined,//正在展示的5个
             index: -1,//第几页
         };
@@ -150,7 +150,7 @@ class ViewGame extends React.Component {
             }
         } else {
             this.state = {
-                rewardss: [],
+                rewardss: undefined,
                 rewards: undefined,
                 index: -1,
             };
@@ -548,7 +548,7 @@ class ViewGame extends React.Component {
                                     </div>
                                 </div>
                             }
-                            
+
                             {
                                 this.state.rewards && <div className="sidebox">{
                                     marquees.map(function (marquee, idx) {
