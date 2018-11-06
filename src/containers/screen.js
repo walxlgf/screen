@@ -1,5 +1,6 @@
 import React from 'react';
 import Marquee from 'react-smooth-marquee';
+import MarqueeDouble from 'react-marquee-double';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
@@ -114,7 +115,7 @@ class ViewGame extends React.Component {
      * @param {*} game 
      */
     dealGameReward(game) {
-        //先把计时器关掉
+        //先把rewardInterval关掉
         if (this.rewardInterval) {
             clearInterval(this.rewardInterval);
             this.rewardInterval = null;
