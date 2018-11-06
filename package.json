@@ -10,6 +10,7 @@
     "react-redux": "^5.0.6",
     "react-scripts": "1.1.0",
     "react-smooth-marquee": "^1.0.0",
+    "react-marquee-double": "^0.1.8",
     "redux-thunk": "^2.2.0"
   },
   "scripts": {

@@ -3,9 +3,11 @@ import Marquee from 'react-smooth-marquee';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
-import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole,subscribeRole,unsubscribeRole } from '../actions/screen';
+import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
 import { formatCountdown } from '../utils';
+
+let marquees = [undefined, undefined, undefined, undefined, undefined];
 class ViewGame extends React.Component {
     constructor(props) {
         super(props);
@@ -16,6 +18,11 @@ class ViewGame extends React.Component {
             countdown: '',//倒计时字符串
             status: '',//比赛状态 'before' 'gaming' 'after'
             showQrcode: false,//单击显示二维码开关
+
+            //奖池相关
+            rewardss,//game.get('reward')分隔回车形成的字符串数组（5个一组）的数组
+            rewards: undefined,//正在展示的5个
+            index: -1,//第几页
         };
     }
 
@@ -70,6 +77,9 @@ class ViewGame extends React.Component {
                 this.props.unsubscribeGame();//先取消对老game的监听
                 this.props.subscribeGame(nextProps.game);
             }
+
+            //处理奖池
+            this.dealGameReward(nextProps.game);
         }
 
         this.setState({
@@ -91,10 +101,84 @@ class ViewGame extends React.Component {
             clearInterval(this.interval);
             this.interval = null;
         }
+        if (this.rewardInterval) {
+            clearInterval(this.rewardInterval);
+            this.rewardInterval = null;
+        }
 
     }
 
 
+    /**
+     * 处理奖池
+     * @param {*} game 
+     */
+    dealGameReward(game) {
+        //先把计时器关掉
+        if (this.rewardInterval) {
+            clearInterval(this.rewardInterval);
+            this.rewardInterval = null;
+        }
+
+        let rewardStr = game.get('reward');
+        console.log(`screen:dealGameReward:rewardStr:${rewardStr}`);
+        if (rewardStr) {
+            let strs = rewardStr.split('\n');
+            let rewardss = [];//二维数组
+            let rewards = [];
+            for (let i = 0; i < strs.length;) {
+                const str = strs[i++];
+                rewards.push(str);
+                if (i == strs.length) {
+                    rewardss.push(rewards);
+                } else if (i !== 0 && i % 5 == 0) {
+                    rewardss.push(rewards);
+                    rewards = [];
+                }
+            }
+            if (rewardss)
+                rewards = rewardss[0];
+
+            this.state = {
+                rewardss,
+                rewards,
+                index: 0,
+            };
+
+            if (!this.rewardInterval) {
+                this.rewardInterval = setInterval(() => this.dealRewardInterval(), 1000 * 10);
+            }
+        } else {
+            this.state = {
+                rewardss: [],
+                rewards: undefined,
+                index: -1,
+            };
+        }
+    }
+
+
+    /**
+     * 
+     */
+    dealRewardInterval() {
+        let index = this.state.index;
+        let i = 0;
+        if (index > 0)
+            i = index % this.state.rewardss.length;
+        let rewards = this.state.rewardss[i];
+        console.log(`screen:dealRewardInterval:index:${index}`);
+        this.setState({ index: ++this.state.index, rewards })
+        for (let i = 0; i < rewards.length; i++) {
+            const reward = rewards[i];
+            marquees[i].move(0);
+            if (reward && reward.length > 30) {
+                marquees[i].start();
+            } else {
+                marquees[i].stop();
+            }
+        }
+    }
 
     /**
      * 根据game的startTime 生成rounds中每个round的开始时间 用于倒计时
@@ -351,14 +435,6 @@ class ViewGame extends React.Component {
                     ante = round ? `${round.ante}` : '--';
                 }
             }
-            if (pause) {
-                // rbg = 'rbgpausing';
-            }
-
-            // roundbox2 = roundbox2 + rbg;
-            // nextroundbox2 = nextroundbox2 + rbg;
-
-
             let game = this.props.game;
             let palyers = game.get('players') ? game.get('players') : 0;
             let startChips = game.get('startChips') ? game.get('startChips') : 0;
@@ -373,6 +449,8 @@ class ViewGame extends React.Component {
             rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
             totalChips = palyers * startChips + rebuyCount * rebuyChips + addonCount * addonChips;
             avgChips = totalChips / palyers;
+
+
 
         }
 
@@ -416,14 +494,13 @@ class ViewGame extends React.Component {
                 {
                     (!this.state.showQrcode && this.props.game) &&
                     <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
-
                         <div className="header">
                             <div className="headersidebox">
                                 <img src={icon}></img>
                             </div>
                             <div className="headercenterbox">
                                 <div className="title">{title}</div>
-                                <div className="gameTitle">{gameTitle}</div>
+                                <div className="subTitle">{gameTitle}</div>
                             </div>
                             <div className="headersidebox">
                                 <div className="gameuuidbox" onClick={this.onShowQrClicked}>
@@ -432,51 +509,72 @@ class ViewGame extends React.Component {
                             </div>
                         </div>
                         <div className="body">
-                            <div className="sidebox">
-                                <div className="siderowbox">
-                                    <div className="leftlblbox">
-                                        <div className="sidelblchs">剩余人数</div>
-                                        <div className="sidelbleng">REST COUNT</div>
-                                    </div>
-                                    <div className="leftvaluebox">
-                                        <div className="sidevalue">
-                                            {restPlayers}
+                            {
+                                !this.state.rewards && <div className="sidebox">
+                                    <div className="siderowbox">
+                                        <div className="leftlblbox">
+                                            <div className="sidelblchs">剩余人数</div>
+                                            <div className="sidelbleng">REST COUNT</div>
+                                        </div>
+                                        <div className="leftvaluebox">
+                                            <div className="sidevalue">
+                                                {restPlayers}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="siderowbox">
-                                    <div className="leftlblbox">
-                                        <div className="sidelblchs">参赛人数</div>
-                                        <div className="sidelbleng">PLAYER COUNT</div>
-                                    </div>
-                                    <div className="leftvaluebox">
-                                        <div className="sidevalue">
-                                            {palyerCount}
+                                    <div className="siderowbox">
+                                        <div className="leftlblbox">
+                                            <div className="sidelblchs">参赛人数</div>
+                                            <div className="sidelbleng">PLAYER COUNT</div>
+                                        </div>
+                                        <div className="leftvaluebox">
+                                            <div className="sidevalue">
+                                                {palyerCount}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="siderowbox">
-                                    <div className="leftlblbox">
-                                        <div className="sidelblchs">奖励人数</div>
-                                        <div className="sidelbleng">REWARD COUNT</div>
-                                    </div>
-                                    <div className="leftvaluebox">
-                                        <div className="sidevalue">
-                                            {rewardPlayers}
+                                    <div className="siderowbox">
+                                        <div className="leftlblbox">
+                                            <div className="sidelblchs">奖励人数</div>
+                                            <div className="sidelbleng">REWARD COUNT</div>
+                                        </div>
+                                        <div className="leftvaluebox">
+                                            <div className="sidevalue">
+                                                {rewardPlayers}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
+                            
+                            {
+                                this.state.rewards && <div className="sidebox">{
+                                    marquees.map(function (marquee, idx) {
+                                        return <MarqueeDouble className="rewardbox" key={idx}
+                                            ref={(ref) => { marquees[idx] = ref }}
+                                            loop={100000}//一共循环多少次
+                                            space={300}
+                                            step={1}//越大越快
+                                            interval={10}//执行完一次后的间隔时间
+                                            autoStart={that.state.rewards[idx] && that.state.rewards[idx].length > 30}
+                                            direction={'left'}
+                                            delay={100}
+                                            onStart={() => {
+                                                console.log(`index:render:marquee${idx}:onStart`);
+                                            }}>
+                                            <h1>{that.state.rewards[idx]}</h1>
+                                        </MarqueeDouble>
+                                    })}
+                                </div>
+                            }
                             <div className="centerbox">
                                 <div className="countdownbox">
                                     <div className="countdown">
                                         {this.state.countdown}
                                     </div>
                                 </div>
-
-
 
                                 {!statusChs && <div className="roundbox3">
                                     <div className="rowbox">
