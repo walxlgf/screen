@@ -501,19 +501,18 @@ class ViewGame extends React.Component {
 
 
         }
-
         const sliderSettings = {
             arrows: false,
             autoplay: true,
-            autoplaySpeed: 1000,
-            speed: 1000,
+            autoplaySpeed: 800,
+            speed: 800,
             dots: false,
             infinite: true,
             slidesToShow: 1,
             slidesToScroll: 1,
             vertical: true,
             verticalSwiping: true,
-        };
+          };
         return (
             <div>
 
