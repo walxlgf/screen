@@ -132,12 +132,14 @@ class ViewGame extends React.Component {
             let array = notificationStr.split('\n');
             for (let i = 0; i < array.length; i++) {
                 const str = array[i];
-                if (str.length > 10) {
-                    for (let j = 0; j * 10 < str.length; j++) {
-                        let start = j * 10;
-                        let end = (j + 1) * 10 < str.length ? (j + 1) * 10 : str.length;
-                        console.log(`index:constructor:notificationStr:start${start} end:${end}`);
-                        notifications.push(str.slice(start, end))
+                let row = 15;
+                if (str.length > row) {
+                    for (let j = 0; j * row < str.length; j++) {
+                        let start = j * row;
+                        let end = (j + 1) * row < str.length ? (j + 1) * row : str.length;
+                        let ntf = str.slice(start, end)
+                        notifications.push(ntf)
+                        console.log(`index:constructor:notificationStr:start${start} end:${end} ntf:${ntf}`);
                     }
                 } else {
                     notifications.push(str);
@@ -719,7 +721,6 @@ class ViewGame extends React.Component {
                                 </div>
                             </div>
                         </div>
-
                         <div className="footer">
                             {
                                 //优先显示暂停 有暂停不显示通知

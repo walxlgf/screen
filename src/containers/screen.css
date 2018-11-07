@@ -140,15 +140,8 @@ body {
   display: -webkit-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-}
-.footerpausebox {
-  width: 100vw;
-  color: white;
-  font-size: 4vh;
-  white-space: nowrap;
-  overflow: hidden;
-  background-color: #D32F2F;
+  justify-content: center;
+  background-color: gray;
 }
 .footernotificationbox {
   width: 80vw;
@@ -159,10 +152,21 @@ body {
   justify-content: center;
   background-color: #D32F2F;
 }
+
+
 .footernotificationvalue {
+  color: white;
   text-align: center;
+  font-size: 4vh;
+}
+
+.footerpausebox {
+  width: 100vw;
   color: white;
   font-size: 4vh;
+  white-space: nowrap;
+  overflow: hidden;
+  background-color: #D32F2F;
 }
 .gameuuidbox {
   width: 100%;
