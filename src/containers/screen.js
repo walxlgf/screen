@@ -1,7 +1,6 @@
 import React from 'react';
-// import Marquee from 'react-smooth-marquee';
+import SmoothMarquee from 'react-smooth-marquee';
 import Marquee from 'react-marquee';
-// import MarqueeDouble from 'react-marquee-double';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
@@ -555,25 +554,13 @@ class ViewGame extends React.Component {
                             {
                                 this.state.rewards && <div className="rewardsidebox">{
                                     marquees.map(function (marquee, idx) {
-                                        // return <MarqueeDouble className="rewardbox" key={idx}
-                                        //     ref={(ref) => { marquees[idx] = ref }}
-                                        //     loop={100000}//一共循环多少次
-                                        //     space={300}
-                                        //     step={1}//越大越快
-                                        //     interval={10}//执行完一次后的间隔时间
-                                        //     autoStart={that.state.rewards[idx] && that.state.rewards[idx].length > 30}
-                                        //     direction={'left'}
-                                        //     delay={100}
-                                        //     onStart={() => {
-                                        //         console.log(`index:render:marquee${idx}:onStart`);
-                                        //     }}>
-                                        //     <div>{that.state.rewards[idx]}</div>
-                                        // </MarqueeDouble>
-                                        return <Marquee
-                                            className='rewardvalue'
-                                            hoverToStop={that.state.rewards[idx] && that.state.rewards[idx].length > 10}
-                                            text={that.state.rewards[idx]}
-                                        />
+                                        return <div className="rewardbox" key={idx}>
+                                            <Marquee
+                                                className='rewardvalue'
+                                                hoverToStop={that.state.rewards[idx] && that.state.rewards[idx].length > 10}
+                                                text={that.state.rewards[idx]}
+                                            />
+                                        </div>
                                     })}
                                 </div>
                             }
@@ -676,9 +663,9 @@ class ViewGame extends React.Component {
                         <div className="footer">
                             {pause &&
                                 <div className="footerpausebox">
-                                    <Marquee>
+                                    <SmoothMarquee>
                                         PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停
-                                    </Marquee>
+                                    </SmoothMarquee>
                                 </div>
                             }
                         </div>
