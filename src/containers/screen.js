@@ -1,6 +1,6 @@
 import React from 'react';
 import Marquee from 'react-marquee';
-import { Carousel } from 'antd';
+import Slider from "react-slick";
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
@@ -8,7 +8,22 @@ import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGam
 import './screen.less';
 import { formatCountdown } from '../utils';
 
-let marquees = [undefined, undefined, undefined, undefined, undefined];
+let marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
+
+const sliderSettings = {
+    arrows: false,
+    dots: true,
+    infinite: true,
+    vertical: true,
+    autoplay: true,
+    autoplaySpeed: 800,
+    centerMode: false,
+    centerPadding: "0px",
+    dots: false,
+    rows: 1,
+    fade: true,
+    draggable: false,
+};
 class ViewGame extends React.Component {
     constructor(props) {
         super(props);
@@ -716,13 +731,13 @@ class ViewGame extends React.Component {
                             {
                                 //优先显示暂停 有暂停不显示通知
                                 !pause && this.state.notifications && <div className="footernotificationbox">
-                                    <Carousel vertical autoplay dots={false}>
+                                    <Slider {...sliderSettings}>
                                         {
                                             this.state.notifications.map(function (notification, idx) {
                                                 return <div key={idx} className="footernotificationvalue">{notification}</div>
                                             })
                                         }
-                                    </Carousel>
+                                    </Slider>
                                 </div>
                             }
                         </div>
