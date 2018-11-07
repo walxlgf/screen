@@ -730,7 +730,8 @@ class ViewGame extends React.Component {
                                 </div>
 
                             }
-                            {
+                            {   
+                                //显示通知
                                 this.state.notifications && <div className="footernotificationbox">
                                     <Marquee hoverToStop={this.state.notification && this.state.notificatio.length > 10} text={this.state.notification} />
                                 </div>
