@@ -1,5 +1,6 @@
 import React from 'react';
 import Marquee from 'react-marquee';
+import { Carousel } from 'antd';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
@@ -26,8 +27,6 @@ class ViewGame extends React.Component {
 
             //通知相关
             notifications: undefined,
-            notification: undefined,
-            ntfIndex: -1,
         };
     }
 
@@ -124,51 +123,34 @@ class ViewGame extends React.Component {
      * @param {*} game 
      */
     dealGameNotification(game) {
-        //先把notificationInterval关掉
-        if (this.notificationInterval) {
-            clearInterval(this.notificationInterval);
-            this.notificationInterval = null;
-        }
-        let ntfStr = game.get('notification');
-        console.log(`screen:dealGameNotification:ntfStr:${ntfStr}`);
-        if (ntfStr) {
-            let notifications = ntfStr.split('\n');
-            let notification;
-            if (notifications)
-                notification = notifications[0];
-            this.setState({
-                notifications,
-                notification,
-                ntfIndex: 0,
-            });
-
-            if (!this.notificationInterval) {
-                this.notificationInterval = setInterval(() => this.dealNotificationInterval(), 1000 * 10);
+        let notificationStr = game.get('notification');
+        if (notificationStr) {
+            let notifications = [];
+            let array = notificationStr.split('\n');
+            for (let i = 0; i < array.length; i++) {
+                const str = array[i];
+                if (str.length > 10) {
+                    for (let j = 0; j * 10 < str.length; j++) {
+                        let start = j * 10;
+                        let end = (j + 1) * 10 < str.length ? (j + 1) * 10 : str.length;
+                        console.log(`index:constructor:notificationStr:start${start} end:${end}`);
+                        notifications.push(str.slice(start, end))
+                    }
+                } else {
+                    notifications.push(str);
+                }
             }
+            console.log(`index:constructor:${JSON.stringify(notifications)}`);
+            this.state = {
+                notifications,
+            };
         } else {
-            this.setState({
+            this.state = {
                 notifications: undefined,
-                notification: undefined,
-                ntfIndex: -1,
-            });
+            };
         }
     }
 
-    /**
-     * 在notificationInterval中每隔10秒执行一次
-     * 通过计算获得循环显示的奖池信息
-     */
-    dealNotificationInterval() {
-        //奖池信息可能有十几条或几十条不等 一屏显示不下
-        //通过rwIndex对总页数求余获取当前页的i.
-        let ntfIndex = this.state.ntfIndex;
-        let i = 0;
-        if (ntfIndex > 0)
-            i = ntfIndex % this.state.notifications.length;
-        let notification = this.state.notifications[i];
-        console.log(`screen:dealRewardInterval:ntfIndex:${ntfIndex}`);
-        this.setState({ ntfIndex: ++this.state.ntfIndex, notification })
-    }
 
     /**
      * 如果比赛有奖池信息 并且允许显示 则显示奖池信息 （现在只判断是否有，有就显示)
@@ -734,7 +716,13 @@ class ViewGame extends React.Component {
                             {
                                 //优先显示暂停 有暂停不显示通知
                                 !pause && this.state.notifications && <div className="footernotificationbox">
-                                    <Marquee hoverToStop={true} text={this.state.notification} />
+                                    <Carousel vertical autoplay dots={false}>
+                                        {
+                                            this.state.notifications.map(function (notification, idx) {
+                                                return <div key={idx} className="footernotificationvalue">{notification}</div>
+                                            })
+                                        }
+                                    </Carousel>
                                 </div>
                             }
                         </div>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.0.0",
     "parse": "^1.11.0",
     "qrcode": "^1.2.2",
     "react": "^16.2.0",

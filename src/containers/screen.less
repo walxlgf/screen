@@ -1,4 +1,5 @@
 /** ---------------------未绑定比赛的大屏幕-----------------------*/
+
 body {
     margin: 0;
 }
@@ -28,10 +29,11 @@ body {
     display: -ms-flex;
     display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
     border-radius: 1vh 1vh 1vh 1vh;
     background-color: #5555;
 }
+
 .uuidqrcode {
     height: 50vh;
     width: auto;
@@ -62,7 +64,6 @@ body {
     color: white;
     font-size: 40vh;
 }
-
 
 .uuiddesc {
     height: 10vh;
@@ -167,17 +168,22 @@ body {
     background-color: #D32F2F;
 }
 
-
 .footernotificationbox {
-    width: 100vw;
-    padding-left: 20vw;
-    padding-right: 20vw;
-    color: white;
-    font-size: 4vh;
-    white-space: nowrap;
-    overflow: hidden;
+    width: 80vw;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background-color: rgb(50, 10, 143);
 }
+
+.footernotificationvalue {
+    text-align: center;
+    color: white;
+    font-size: 4vh;
+}
+
 
 .gameuuidbox {
     width: 100%;
@@ -224,7 +230,6 @@ body {
     align-items: flex-start;
 }
 
-
 .countdownbox {
     width: 100%;
     height: 40vh;
@@ -266,7 +271,6 @@ body {
     border-radius: 0vh 0vh 0vh 0vh;
     background-color: rgba(0, 255, 0, 0.33);
 }
-
 
 .nextroundbox3 {
     width: 100%;
@@ -316,8 +320,7 @@ body {
 }
 
 .rowbox {
-    width: 100%;
-    // height: 10vh;
+    width: 100%; // height: 10vh;
     box-sizing: border-box;
     display: flex;
     display: -webkit-flex;
@@ -384,7 +387,6 @@ body {
 
 /*奖池*/
 
-
 .rewardsidebox {
     height: 76vh;
     width: 20vw;
@@ -396,6 +398,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
 }
+
 .rewardbox {
     width: 20vw;
     box-sizing: border-box;
@@ -415,6 +418,7 @@ body {
     font-size: 6vh;
     color: rgba(255, 255, 255, 0.86);
 }
+
 /*左边*/
 
 .sidebox {
