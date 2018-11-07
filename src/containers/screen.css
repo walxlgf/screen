@@ -152,6 +152,7 @@ body {
 }
 .footernotificationbox {
   width: 80vw;
+  height: 6vh;
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
