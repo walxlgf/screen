@@ -1,5 +1,4 @@
 import React from 'react';
-import SmoothMarquee from 'react-smooth-marquee';
 import Marquee from 'react-marquee';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -23,7 +22,12 @@ class ViewGame extends React.Component {
             //奖池相关
             rewardss: undefined,//game.get('reward')分隔回车形成的字符串数组（5个一组）的数组
             rewards: undefined,//正在展示的5个
-            index: -1,//第几页
+            rwIndex: -1,//第几页
+
+            //通知相关
+            notifications: undefined,
+            notification: undefined,
+            ntfIndex: -1,
         };
     }
 
@@ -81,6 +85,9 @@ class ViewGame extends React.Component {
 
             //处理奖池
             this.dealGameReward(nextProps.game);
+
+            //处理通知
+            this.dealGameNotification(nextProps.notification);
         }
 
         this.setState({
@@ -111,7 +118,60 @@ class ViewGame extends React.Component {
 
 
     /**
-     * 处理奖池
+     * 如果比赛有通知 则显示通知
+     * game中notification是一个用包含换行的字符串 
+     * 分隔成数组 循环播放
+     * @param {*} game 
+     */
+    dealGameNotification(game) {
+        //先把notificationInterval关掉
+        if (this.notificationInterval) {
+            clearInterval(this.notificationInterval);
+            this.notificationInterval = null;
+        }
+        let ntfStr = game.get('notification');
+        console.log(`screen:dealGameNotification:ntfStr:${ntfStr}`);
+        if (ntfStr) {
+            let notifications = ntfStr.split('\n');
+            let notification;
+            if (notifications)
+                notification = notifications[0];
+            this.setState({
+                notifications,
+                notification,
+                ntfIndex: 0,
+            });
+
+            if (!this.notificationInterval) {
+                this.notificationInterval = setInterval(() => this.dealNotificationInterval(), 1000 * 10);
+            }
+        } else {
+            this.setState({
+                notifications: undefined,
+                notification: undefined,
+                ntfIndex: -1,
+            });
+        }
+    }
+
+    /**
+     * 在notificationInterval中每隔10秒执行一次
+     * 通过计算获得循环显示的奖池信息
+     */
+    dealNotificationInterval() {
+        //奖池信息可能有十几条或几十条不等 一屏显示不下
+        //通过rwIndex对总页数求余获取当前页的i.
+        let ntfIndex = this.state.ntfIndex;
+        let i = 0;
+        if (ntfIndex > 0)
+            i = ntfIndex % this.state.notifications.length;
+        let notification = this.state.notifications[i];
+        console.log(`screen:dealRewardInterval:ntfIndex:${ntfIndex}`);
+        this.setState({ ntfIndex: ++this.state.ntfIndex, notification })
+    }
+
+    /**
+     * 如果比赛有奖池信息 并且允许显示 则显示奖池信息 （现在只判断是否有，有就显示)
      * @param {*} game 
      */
     dealGameReward(game) {
@@ -120,7 +180,6 @@ class ViewGame extends React.Component {
             clearInterval(this.rewardInterval);
             this.rewardInterval = null;
         }
-
         let rewardStr = game.get('reward');
         console.log(`screen:dealGameReward:rewardStr:${rewardStr}`);
         if (rewardStr) {
@@ -143,7 +202,7 @@ class ViewGame extends React.Component {
             this.setState({
                 rewardss,
                 rewards,
-                index: 0,
+                rwIndex: 0,
             });
 
             if (!this.rewardInterval) {
@@ -153,31 +212,26 @@ class ViewGame extends React.Component {
             this.setState({
                 rewardss: undefined,
                 rewards: undefined,
-                index: -1,
+                rwIndex: -1,
             });
         }
     }
 
 
     /**
-     * 
+     * 在rewardInterval中每隔10秒执行一次
+     * 通过计算获得循环显示的奖池信息
      */
     dealRewardInterval() {
-        let index = this.state.index;
+        //奖池信息可能有十几条或几十条不等 一屏显示不下
+        //通过rwIndex对总页数求余获取当前页的i.
+        let rwIndex = this.state.rwIndex;
         let i = 0;
-        if (index > 0)
-            i = index % this.state.rewardss.length;
+        if (rwIndex > 0)
+            i = rwIndex % this.state.rewardss.length;
         let rewards = this.state.rewardss[i];
-        console.log(`screen:dealRewardInterval:index:${index}`);
-        this.setState({ index: ++this.state.index, rewards })
-        // for (let i = 0; i < rewards.length; i++) {
-        //     const reward = rewards[i];
-        //     if (reward && reward.length > 30) {
-        //         marquees[i].start();
-        //     } else {
-        //         marquees[i].stop();
-        //     }
-        // }
+        console.log(`screen:dealRewardInterval:rwIndex:${rwIndex}`);
+        this.setState({ rwIndex: ++this.state.rwIndex, rewards })
     }
 
     /**
@@ -203,7 +257,8 @@ class ViewGame extends React.Component {
     }
 
     /**
-     * 
+     * 在Interval中每隔一秒执行一次
+     * 根据比赛的开始时间计算当前的状态 所在盲注的索引等信息
      */
     getCountdown() {
         //判断是不是暂停 如果有值 是在暂停
@@ -354,6 +409,10 @@ class ViewGame extends React.Component {
 
 
     }
+    /**
+     * 如果有人已经扫码绑定此块屏幕 但由于各种原因 其它用户想要绑定这个屏幕
+     * 就需要用户单击右上角 弹出二维码 给当前用户重新绑定
+     */
     onShowQrClicked = () => {
         this.setState({ showQrcode: !this.state.showQrcode })
     }
@@ -460,9 +519,11 @@ class ViewGame extends React.Component {
             <div>
 
                 {
+                    // 如果有人已经扫码绑定此块屏幕 但由于各种原因 其它用户想要绑定这个屏幕
+                    //就需要用户单击右上角 弹出二维码 给当前用户重新绑定
                     this.state.showQrcode &&
-                    <div className="uuidfull">
-                        <div className="qrcodebox" onClick={this.onShowQrClicked}>
+                    <div className="uuidfull" onClick={this.onShowQrClicked}>
+                        <div className="qrcodebox" >
                             <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
                         </div>
                     </div>
@@ -492,6 +553,7 @@ class ViewGame extends React.Component {
                             </div>
                         </div>
                     </div>
+
                 }
                 {
                     (!this.state.showQrcode && this.props.game) &&
@@ -511,7 +573,8 @@ class ViewGame extends React.Component {
                             </div>
                         </div>
                         <div className="body">
-                            {
+
+                            {//左边正常是显示剩余人数、参赛人数等 
                                 !this.state.rewards && <div className="sidebox">
                                     <div className="siderowbox">
                                         <div className="leftlblbox">
@@ -551,7 +614,7 @@ class ViewGame extends React.Component {
                                 </div>
                             }
 
-                            {
+                            {//如果比赛有奖池信息 并且允许显示 则显示奖池信息 （现在只判断是否有，有就显示)
                                 this.state.rewards && <div className="rewardsidebox">{
                                     marquees.map(function (marquee, idx) {
                                         return <div className="rewardbox" key={idx}>
@@ -661,11 +724,15 @@ class ViewGame extends React.Component {
                         </div>
 
                         <div className="footer">
-                            {pause &&
-                                <div className="footerpausebox">
-                                    <SmoothMarquee>
-                                        PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停
-                                    </SmoothMarquee>
+                            {
+                                pause && <div className="footerpausebox">
+                                    <Marquee hoverToStop={true} text="    PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   " />
+                                </div>
+
+                            }
+                            {
+                                this.state.notifications && <div className="footernotificationbox">
+                                    <Marquee hoverToStop={this.state.notification && this.state.notificatio.length > 10} text={this.state.notification} />
                                 </div>
                             }
                         </div>
