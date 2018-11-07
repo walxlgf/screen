@@ -19,7 +19,6 @@ const sliderSettings = {
     autoplaySpeed: 800,
     centerMode: false,
     centerPadding: "0px",
-    dots: false,
     rows: 1,
     fade: true,
     draggable: false,
@@ -156,13 +155,13 @@ class ViewGame extends React.Component {
                 }
             }
             console.log(`index:constructor:${JSON.stringify(notifications)}`);
-            this.state = {
+            this.setState({
                 notifications,
-            };
+            });
         } else {
-            this.state = {
+            this.setState({
                 notifications: undefined,
-            };
+            });
         }
     }
 
@@ -186,9 +185,9 @@ class ViewGame extends React.Component {
             for (let i = 0; i < strs.length;) {
                 const str = strs[i++];
                 rewards.push(str);
-                if (i == strs.length) {
+                if (i === strs.length) {
                     rewardss.push(rewards);
-                } else if (i !== 0 && i % 5 == 0) {
+                } else if (i !== 0 && i % 5 === 0) {
                     rewardss.push(rewards);
                     rewards = [];
                 }
@@ -228,7 +227,7 @@ class ViewGame extends React.Component {
             i = rwIndex % this.state.rewardss.length;
         let rewards = this.state.rewardss[i];
         console.log(`screen:dealRewardInterval:rwIndex:${rwIndex}`);
-        this.setState({ rwIndex: ++this.state.rwIndex, rewards })
+        this.setState({ rwIndex: ++this.state.rwIndex, rewards });
     }
 
     /**
@@ -730,7 +729,8 @@ class ViewGame extends React.Component {
                             }
                             {
                                 //优先显示暂停 有暂停不显示通知
-                                !pause && this.state.notifications && <div className="footernotificationbox">
+                                (!pause && this.state.notifications) &&
+                                <div className="footernotificationbox">
                                     <Slider {...sliderSettings}>
                                         {
                                             this.state.notifications.map(function (notification, idx) {
