@@ -6,23 +6,12 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
+import "../../node_modules/slick-carousel/slick/slick.css";
+import "../../node_modules/slick-carousel/slick/slick-theme.css";
 import { formatCountdown } from '../utils';
 
 let marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
 
-const sliderSettings = {
-    arrows: false,
-    dots: true,
-    infinite: true,
-    vertical: true,
-    autoplay: true,
-    autoplaySpeed: 800,
-    centerMode: false,
-    centerPadding: "0px",
-    rows: 1,
-    fade: true,
-    draggable: false,
-};
 class ViewGame extends React.Component {
     constructor(props) {
         super(props);
@@ -511,6 +500,18 @@ class ViewGame extends React.Component {
 
         }
 
+        const sliderSettings = {
+            arrows: false,
+            autoplay: true,
+            autoplaySpeed: 1000,
+            speed: 1000,
+            dots: false,
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            vertical: true,
+            verticalSwiping: true,
+        };
         return (
             <div>
 
