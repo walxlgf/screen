@@ -87,7 +87,7 @@ class ViewGame extends React.Component {
             this.dealGameReward(nextProps.game);
 
             //处理通知
-            this.dealGameNotification(nextProps.notification);
+            this.dealGameNotification(nextProps.game);
         }
 
         this.setState({
