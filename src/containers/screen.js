@@ -725,15 +725,16 @@ class ViewGame extends React.Component {
 
                         <div className="footer">
                             {
+                                //优先显示暂停 有暂停不显示通知
                                 pause && <div className="footerpausebox">
                                     <Marquee hoverToStop={true} text="    PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   " />
                                 </div>
 
                             }
-                            {   
-                                //显示通知
-                                this.state.notifications && <div className="footernotificationbox">
-                                    <Marquee hoverToStop={this.state.notification && this.state.notification.length > 10} text={this.state.notification} />
+                            {
+                                //优先显示暂停 有暂停不显示通知
+                                !pause && this.state.notifications && <div className="footernotificationbox">
+                                    <Marquee hoverToStop={true} text={this.state.notification} />
                                 </div>
                             }
                         </div>
