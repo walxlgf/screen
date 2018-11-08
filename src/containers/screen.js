@@ -1,14 +1,14 @@
 import React from 'react';
 import Marquee from 'react-marquee';
-// import Slider from "react-slick";
-import { Carousel } from 'antd';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
-// import "./slick/slick.css";
-// import "./slick/slick-theme.css";
+import Slider from "react-slick";
+import "jquery";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 import { formatCountdown } from '../utils';
 
 let marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
@@ -513,7 +513,7 @@ class ViewGame extends React.Component {
             slidesToScroll: 1,
             vertical: true,
             verticalSwiping: true,
-        };
+          };
         return (
             <div>
 
@@ -724,23 +724,23 @@ class ViewGame extends React.Component {
                         <div className="footer">
                             {
                                 //优先显示暂停 有暂停不显示通知
+                                (!pause && this.state.notifications) &&
+                                <div className="footernotificationbox">
+                                    <Slider {...sliderSettings}>
+                                        {
+                                            this.state.notifications.map(function (notification, idx) {
+                                                return <div key={idx} className="footernotificationvalue">{notification}</div>
+                                            })
+                                        }
+                                    </Slider>
+                                </div>
+                            }
+                            {
+                                //优先显示暂停 有暂停不显示通知
                                 pause && <div className="footerpausebox">
                                     <Marquee hoverToStop={true} text="    PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   " />
                                 </div>
 
-                            }
-                            {
-                                //优先显示暂停 有暂停不显示通知
-                                (!pause && this.state.notifications) &&
-                                <div className="footernotificationbox">
-                                    <Carousel {...sliderSettings}>
-                                        {
-                                            this.state.notifications.map(function (notification, idx) {
-                                                return <div key={idx} >{notification}</div>
-                                            })
-                                        }
-                                    </Carousel>
-                                </div>
                             }
                         </div>
                     </div>
