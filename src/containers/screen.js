@@ -736,7 +736,7 @@ class ViewGame extends React.Component {
                                     <Carousel {...sliderSettings}>
                                         {
                                             this.state.notifications.map(function (notification, idx) {
-                                                return <div key={idx} style={{ textAlign: 'center', color: 'white', fontSize: '4vh' }}>{notification}</div>
+                                                return <div key={idx} >{notification}</div>
                                             })
                                         }
                                     </Carousel>
