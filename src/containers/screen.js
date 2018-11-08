@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
-import "../slick/slick.css";
-import "../slick/slick-theme.css";
+import "./slick/slick.css";
+import "./slick/slick-theme.css";
 import { formatCountdown } from '../utils';
 
 let marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
