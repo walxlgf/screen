@@ -1,13 +1,14 @@
 import React from 'react';
 import Marquee from 'react-marquee';
-import Slider from "react-slick";
+// import Slider from "react-slick";
+import { Carousel } from 'antd';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
-import "./slick/slick.css";
-import "./slick/slick-theme.css";
+// import "./slick/slick.css";
+// import "./slick/slick-theme.css";
 import { formatCountdown } from '../utils';
 
 let marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
@@ -512,7 +513,7 @@ class ViewGame extends React.Component {
             slidesToScroll: 1,
             vertical: true,
             verticalSwiping: true,
-          };
+        };
         return (
             <div>
 
@@ -732,13 +733,13 @@ class ViewGame extends React.Component {
                                 //优先显示暂停 有暂停不显示通知
                                 (!pause && this.state.notifications) &&
                                 <div className="footernotificationbox">
-                                    <Slider {...sliderSettings}>
+                                    <Carousel {...sliderSettings}>
                                         {
                                             this.state.notifications.map(function (notification, idx) {
-                                                return <div key={idx} className="footernotificationvalue">{notification}</div>
+                                                return <div key={idx} style={{ textAlign: 'center', color: 'white', fontSize: '4vh' }}>{notification}</div>
                                             })
                                         }
-                                    </Slider>
+                                    </Carousel>
                                 </div>
                             }
                         </div>
