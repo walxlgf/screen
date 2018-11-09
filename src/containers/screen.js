@@ -1,15 +1,16 @@
 import React from 'react';
-import Marquee from 'react-marquee';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { init, subscribeDevice, unsubscribeDevice, subscribeGame, unsubscribeGame, subscribeDeviceRole, unsubscribeDeviceRole, subscribeRole, unsubscribeRole } from '../actions/screen';
 import './screen.less';
-import Slider from "react-slick";
-import "jquery";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
 import { formatCountdown } from '../utils';
+//自定义组件
+import { Initial } from '../components/initial';
+import { ShowQR } from '../components/showQR';
+import { BindedUser } from '../components/bindedUser';
+import { BindedGame } from '../components/bindedGame';
+import { BindedGameWithReward } from '../components/bindedGameWithReward';
 
 let marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
 
@@ -32,6 +33,8 @@ class ViewGame extends React.Component {
             //通知相关
             notifications: undefined,
         };
+        //绑定方法
+        this.onShowQrClicked = this.onShowQrClicked.bind(this);
     }
 
     componentWillMount() {
@@ -42,8 +45,6 @@ class ViewGame extends React.Component {
         console.log(`screen:componentDidMount`);
         //初始化 用screen登录 监听 devices
         this.props.init();
-
-
     }
 
     componentWillReceiveProps(nextProps) {
@@ -71,7 +72,7 @@ class ViewGame extends React.Component {
                 }
             }
         }
-        console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('uuid')}`);
+        console.log(`screen:componentWillReceiveProps:this.props.game:${this.props.game && this.props.game.get('title')} nextProps.game:${nextProps.game && nextProps.game.get('title')}`);
         //监听比赛
         if (nextProps.game) {
             console.log(`screen:componentWillReceiveProps：game`);
@@ -87,7 +88,7 @@ class ViewGame extends React.Component {
             }
 
             //处理奖池
-            this.dealGameReward(nextProps.game);
+            this.dealGameReward(nextProps.game, nextProps.device);
 
             //处理通知
             this.dealGameNotification(nextProps.game);
@@ -133,20 +134,20 @@ class ViewGame extends React.Component {
             let array = notificationStr.split('\n');
             for (let i = 0; i < array.length; i++) {
                 const str = array[i];
-                let row = 15;
+                let row = 40;
                 if (str.length > row) {
                     for (let j = 0; j * row < str.length; j++) {
                         let start = j * row;
                         let end = (j + 1) * row < str.length ? (j + 1) * row : str.length;
                         let ntf = str.slice(start, end)
                         notifications.push(ntf)
-                        console.log(`index:constructor:notificationStr:start${start} end:${end} ntf:${ntf}`);
+                        // console.log(`index:constructor:notificationStr:start${start} end:${end} ntf:${ntf}`);
                     }
                 } else {
                     notifications.push(str);
                 }
             }
-            console.log(`index:constructor:${JSON.stringify(notifications)}`);
+            // console.log(`index:constructor:${JSON.stringify(notifications)}`);
             this.setState({
                 notifications,
             });
@@ -162,46 +163,49 @@ class ViewGame extends React.Component {
      * 如果比赛有奖池信息 并且允许显示 则显示奖池信息 （现在只判断是否有，有就显示)
      * @param {*} game 
      */
-    dealGameReward(game) {
+    dealGameReward(game, device) {
+        console.log(`screen:dealGameReward:`);
         //先把rewardInterval关掉
         if (this.rewardInterval) {
             clearInterval(this.rewardInterval);
             this.rewardInterval = null;
         }
-        let rewardStr = game.get('reward');
-        console.log(`screen:dealGameReward:rewardStr:${rewardStr}`);
-        if (rewardStr) {
-            let strs = rewardStr.split('\n');
-            let rewardss = [];//二维数组
-            let rewards = [];
-            for (let i = 0; i < strs.length;) {
-                const str = strs[i++];
-                rewards.push(str);
-                if (i === strs.length) {
-                    rewardss.push(rewards);
-                } else if (i !== 0 && i % 5 === 0) {
-                    rewardss.push(rewards);
-                    rewards = [];
+        if (device && device.get('type') === 'withreward') {
+            let rewardStr = game.get('reward');
+            console.log(`screen:dealGameReward:rewardStr:${rewardStr}`);
+            if (rewardStr) {
+                let strs = rewardStr.split('\n');
+                let rewardss = [];//二维数组
+                let rewards = [];
+                for (let i = 0; i < strs.length;) {
+                    const str = strs[i++];
+                    rewards.push(str);
+                    if (i === strs.length) {
+                        rewardss.push(rewards);
+                    } else if (i !== 0 && i % 9 === 0) {
+                        rewardss.push(rewards);
+                        rewards = [];
+                    }
                 }
-            }
-            if (rewardss)
-                rewards = rewardss[0];
+                if (rewardss)
+                    rewards = rewardss[0];
 
-            this.setState({
-                rewardss,
-                rewards,
-                rwIndex: 0,
-            });
+                this.setState({
+                    rewardss,
+                    rewards,
+                    rwIndex: 0,
+                });
 
-            if (!this.rewardInterval) {
-                this.rewardInterval = setInterval(() => this.dealRewardInterval(), 1000 * 10);
+                if (!this.rewardInterval) {
+                    this.rewardInterval = setInterval(() => this.dealRewardInterval(), 1000 * 10);
+                }
+            } else {
+                this.setState({
+                    rewardss: undefined,
+                    rewards: undefined,
+                    rwIndex: -1,
+                });
             }
-        } else {
-            this.setState({
-                rewardss: undefined,
-                rewards: undefined,
-                rwIndex: -1,
-            });
         }
     }
 
@@ -401,349 +405,69 @@ class ViewGame extends React.Component {
      * 如果有人已经扫码绑定此块屏幕 但由于各种原因 其它用户想要绑定这个屏幕
      * 就需要用户单击右上角 弹出二维码 给当前用户重新绑定
      */
-    onShowQrClicked = () => {
+    onShowQrClicked() {
         this.setState({ showQrcode: !this.state.showQrcode })
     }
 
     render() {
-
-        let that = this;
-        //如果比赛不存在 显示UUID界面
-        let uuid = '--';
-
-        let countdownTitle = '';
-        let pause = false;
-        let blind = '--';
-        let ante = '--';
-        let nextBlind = '--';
-        let currentLevel = '--';
-
-        let statusChs;
-        let statusEng;
-
-        let palyerCount = '--';
-        let totalChips = '--';
-        let avgChips = '--';
-        let restPlayers = '--';
-        let rewardPlayers = '--';
-        let gameTitle = '';
-
-        let icon;
-        let bg = `url("../images/bg.jpg")`;
-
-        //
-        let title = '';
-        let role = this.props.role;
-        if (role) {
-            title = role.get('title');
-            icon = role.get('icon');
-            if (role.get('bg'))
-                bg = role.get('bg');
-        }
-
-        if (!this.props.game) {
-            if (this.props.device)
-                uuid = this.props.device.get('uuid');
-        }
-        //如果比赛 显示比赛大屏幕
-        else {
-            if (this.props.device)
-                uuid = this.props.device.get('uuid');
-
-            pause = this.props.game.get('pauseTime') ? true : false;
-
-            if (this.state.status === 'before') {
-                countdownTitle = '尚未开始';
-                statusChs = '准 备';
-                statusEng = 'PREPARE';
-                // rbg = 'rbgbefore';
-            } else if (this.state.status === 'gaming') {
-                let round = this.state.rounds[this.state.currentRoundIndex];
-                currentLevel = round.level;
-                if (this.state.breaking) {
-                    countdownTitle = `级别:${round ? round.level : ''}休息中`;
-                    statusChs = '休 息';
-                    statusEng = 'BREAK';
-                } else {
-                    countdownTitle = `级别:${round ? round.level : ''}`;
-                }
-                blind = round ? `${round.smallBlind}/${round.bigBlind}` : '--';
-                ante = round ? `${round.ante}` : '--';
-                if (this.state.currentRoundIndex + 1 < this.state.rounds.length) {
-                    let nextRound = this.state.rounds[this.state.currentRoundIndex + 1];
-                    nextBlind = nextRound ? `${nextRound.smallBlind}/${nextRound.bigBlind}` : '--';
-                }
-
-            } else if (this.state.status === 'after') {
-                // rbg = 'rbgafter';
-                let round = this.state.rounds[this.state.currentRoundIndex];
-                if (round) {
-                    currentLevel = round.level;
-                    countdownTitle = `已经结束 级别:${round ? round.level : ''}`;
-                    blind = round ? `${round.smallBlind}/${round.bigBlind}` : '--';
-                    ante = round ? `${round.ante}` : '--';
-                }
-            }
-            let game = this.props.game;
-            let palyers = game.get('players') ? game.get('players') : 0;
-            let startChips = game.get('startChips') ? game.get('startChips') : 0;
-            let rebuyChips = game.get('rebuyChips') ? game.get('rebuyChips') : 0;
-            let addonChips = game.get('addonChips') ? game.get('addonChips') : 0;
-            let rebuyCount = game.get('rebuyCount') ? game.get('rebuyCount') : 0;
-            let addonCount = game.get('addonCount') ? game.get('addonCount') : 0;
-
-            gameTitle = game.get('title');
-            palyerCount = `${palyers ? palyers : '0'}/${rebuyCount ? rebuyCount : '0'}/${addonCount ? addonCount : '0'}`
-            restPlayers = game.get('restPlayers') ? game.get('restPlayers') : 0;
-            rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
-            totalChips = palyers * startChips + rebuyCount * rebuyChips + addonCount * addonChips;
-            avgChips = totalChips / palyers;
-
-
-
-        }
-        const sliderSettings = {
-            arrows: false,
-            autoplay: true,
-            autoplaySpeed: 800,
-            speed: 800,
-            dots: false,
-            infinite: true,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            vertical: true,
-            verticalSwiping: true,
-          };
+        //获取大屏幕类别
+        let type = 'normal';
+        if (this.props.device)
+            type = this.props.device.get('type');
+        if (!type)
+            type = 'normal';
         return (
             <div>
-
+                {
+                    //初始界面  只显示二维码供人扫描
+                    !this.state.showQrcode && !this.props.role &&
+                    <Initial qrcodeUrl={this.props.qrcodeUrl} onShowQrClicked={this.onShowQrClicked}></Initial>
+                }
                 {
                     // 如果有人已经扫码绑定此块屏幕 但由于各种原因 其它用户想要绑定这个屏幕
                     //就需要用户单击右上角 弹出二维码 给当前用户重新绑定
                     this.state.showQrcode &&
-                    <div className="uuidfull" onClick={this.onShowQrClicked}>
-                        <div className="qrcodebox" >
-                            <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
-                        </div>
-                    </div>
+                    <ShowQR qrcodeUrl={this.props.qrcodeUrl} onShowQrClicked={this.onShowQrClicked}></ShowQR>
                 }
                 {
-                    (!this.state.showQrcode && !this.props.role) &&
-                    <div className="uuidfull">
-                        <div className="qrcodebox">
-                            <img className="uuidqrcode" src={this.props.qrcodeUrl}></img>
-                        </div>
-                    </div>
+                    //用户绑定屏幕 但没有比赛绑定
+                    !this.state.showQrcode && this.props.role && !this.props.game &&
+                    <BindedUser role={this.props.role} device={this.props.device} onShowQrClicked={this.onShowQrClicked}></BindedUser>
                 }
                 {
-                    (!this.state.showQrcode && this.props.role && !this.props.game) &&
-                    <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
-                        <div className="header">
-                            <div className="headersidebox">
-                                <img src={icon}></img>
-                            </div>
-                            <div className="headercenterbox">
-                                <div className="title">{title}</div>
-                            </div>
-                            <div className="headersidebox" onClick={this.onShowQrClicked}>
-                                <div className="gameuuidbox">
-                                    <div className="gameuuid">编码:{uuid}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    //屏幕已被比赛绑定 但没有显示奖池
+                    !this.state.showQrcode && this.props.game && type === 'normal' &&
+                    <BindedGame role={this.props.role}
+                        device={this.props.device}
+                        game={this.props.game}
+                        onShowQrClicked={this.onShowQrClicked}
+                        status={this.state.status}
+                        currentRoundIndex={this.state.currentRoundIndex}
+                        rounds={this.state.rounds}
+                        breaking={this.state.breaking}
+                        countdown={this.state.countdown}
+                        nextBreak={this.state.nextBreak}
+                        notifications={this.state.notifications}
+                    >
+                    </BindedGame>
                 }
                 {
-                    (!this.state.showQrcode && this.props.game) &&
-                    <div className="full" style={{ backgroundImage: `url("${bg}")` }}>
-                        <div className="header">
-                            <div className="headersidebox">
-                                <img src={icon}></img>
-                            </div>
-                            <div className="headercenterbox">
-                                <div className="title">{title}</div>
-                                <div className="subTitle">{gameTitle}</div>
-                            </div>
-                            <div className="headersidebox">
-                                <div className="gameuuidbox" onClick={this.onShowQrClicked}>
-                                    <div className="gameuuid">编码:{uuid}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="body">
-
-                            {//左边正常是显示剩余人数、参赛人数等 
-                                !this.state.rewards && <div className="sidebox">
-                                    <div className="siderowbox">
-                                        <div className="leftlblbox">
-                                            <div className="sidelblchs">剩余人数</div>
-                                            <div className="sidelbleng">REST COUNT</div>
-                                        </div>
-                                        <div className="leftvaluebox">
-                                            <div className="sidevalue">
-                                                {restPlayers}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="siderowbox">
-                                        <div className="leftlblbox">
-                                            <div className="sidelblchs">参赛人数</div>
-                                            <div className="sidelbleng">PLAYER COUNT</div>
-                                        </div>
-                                        <div className="leftvaluebox">
-                                            <div className="sidevalue">
-                                                {palyerCount}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="siderowbox">
-                                        <div className="leftlblbox">
-                                            <div className="sidelblchs">奖励人数</div>
-                                            <div className="sidelbleng">REWARD COUNT</div>
-                                        </div>
-                                        <div className="leftvaluebox">
-                                            <div className="sidevalue">
-                                                {rewardPlayers}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                            {//如果比赛有奖池信息 并且允许显示 则显示奖池信息 （现在只判断是否有，有就显示)
-                                this.state.rewards && <div className="rewardsidebox">{
-                                    marquees.map(function (marquee, idx) {
-                                        return <div className="rewardbox" key={idx}>
-                                            <Marquee
-                                                className='rewardvalue'
-                                                hoverToStop={that.state.rewards[idx] && that.state.rewards[idx].length > 10}
-                                                text={that.state.rewards[idx]}
-                                            />
-                                        </div>
-                                    })}
-                                </div>
-                            }
-                            <div className="centerbox">
-                                <div className="countdownbox">
-                                    <div className="countdown">
-                                        {this.state.countdown}
-                                    </div>
-                                </div>
-
-                                {!statusChs && <div className="roundbox3">
-                                    <div className="rowbox">
-                                        <div className="lblbox">
-                                            <div className="lblchs">盲注</div>
-                                            <div className="lbleng">BLIND</div>
-                                        </div>
-                                        <div className="valuebox">
-                                            <div className="value">
-                                                {blind}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="rowbox">
-                                        <div className="lblbox">
-                                            <div className="lblchs">前注</div>
-                                            <div className="lbleng">ANTE</div>
-                                        </div>
-                                        <div className="valuebox">
-                                            <div className="value">
-                                                {ante}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>}
-
-                                {statusChs &&
-                                    <div className="statusbox">
-                                        <div className="statuschs">
-                                            {statusChs}
-                                        </div>
-                                        <div className="statuschs">
-                                            {statusEng}
-                                        </div>
-                                    </div>
-                                }
-                                <div className="nextroundbox3">
-                                    <div className="rowbox">
-                                        <div className="lblbox">
-                                            <div className="minilblchs">下一级别</div>
-                                            <div className="minilbleng">NEXT LEVEL</div>
-                                        </div>
-                                        <div className="valuebox">
-                                            <div className="minivalue">
-                                                {nextBlind}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sidebox">
-                                <div className="siderowbox">
-                                    <div className="rightlblbox">
-                                        <div className="sidelblchs">当前级别</div>
-                                        <div className="sidelbleng">CURRENT LEVEL</div>
-                                    </div>
-                                    <div className="rightvaluebox">
-                                        <div className="sidevalue">
-                                            {currentLevel}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="siderowbox">
-                                    <div className="rightlblbox">
-                                        <div className="sidelblchs">下一休息</div>
-                                        <div className="sidelbleng">NEXT BREAK</div>
-                                    </div>
-                                    <div className="rightvaluebox">
-                                        <div className="sidevalue">
-                                            {this.state.nextBreak}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="siderowbox">
-                                    <div className="rightlblbox">
-                                        <div className="sidelblchs">平均记分牌</div>
-                                        <div className="sidelbleng">AVG.CHIPS</div>
-                                    </div>
-                                    <div className="rightvaluebox">
-                                        <div className="sidevalue">
-                                            {avgChips}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="footer">
-                            {
-                                //优先显示暂停 有暂停不显示通知
-                                (!pause && this.state.notifications) &&
-                                <div className="footernotificationbox">
-                                    <Slider {...sliderSettings}>
-                                        {
-                                            this.state.notifications.map(function (notification, idx) {
-                                                return <div key={idx} className="footernotificationvalue">{notification}</div>
-                                            })
-                                        }
-                                    </Slider>
-                                </div>
-                            }
-                            {
-                                //优先显示暂停 有暂停不显示通知
-                                pause && <div className="footerpausebox">
-                                    <Marquee hoverToStop={true} text="    PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   PAUSE　暂 停   " />
-                                </div>
-
-                            }
-                        </div>
-                    </div>
+                    //屏幕已被比赛绑定 并且显示奖池
+                    !this.state.showQrcode && this.props.game && type === 'withreward' &&
+                    <BindedGameWithReward role={this.props.role}
+                        device={this.props.device}
+                        game={this.props.game}
+                        onShowQrClicked={this.onShowQrClicked}
+                        status={this.state.status}
+                        currentRoundIndex={this.state.currentRoundIndex}
+                        rounds={this.state.rounds}
+                        breaking={this.state.breaking}
+                        countdown={this.state.countdown}
+                        nextBreak={this.state.nextBreak}
+                        notifications={this.state.notifications}
+                        rewards={this.state.rewards}
+                    >
+                    </BindedGameWithReward>
                 }
             </div>
         );

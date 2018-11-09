@@ -1,0 +1,447 @@
+.r-full {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-image: url("../images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
+}
+
+/*头部*/
+
+.r-header {
+    width: 100%;
+    height: 16vh;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.r-headersidebox {
+    height: 100%;
+    width: 20vw;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    //border: 1px dotted red;
+}
+
+.r-headercenterbox {
+    height: 100%;
+    width: 60vw;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    //border: 1px dotted red;
+}
+
+.r-title {
+    flex-grow: 3;
+    text-align: center;
+    color: white;
+    font-size: 7vh;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.r-subTitle {
+    flex-grow: 2;
+    text-align: center;
+    color: white;
+    font-size: 5vh;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.r-gameuuidbox {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.r-gameuuid {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.46);
+    font-size: 3vh;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 3vw;
+}
+
+/*尾部*/
+
+.r-footer {
+    width: 100%;
+    height: 8vh;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.r-footerpausebox {
+    width: 100vw;
+    color: white;
+    font-size: 4vh;
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: #D32F2F;
+}
+
+.r-footernotificationbox {
+    width: 80vw;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    justify-content: center;
+    //border: 1px dotted white;
+}
+
+.r-footernotificationvalue {
+    text-align: center;
+    color: white;
+    font-size: 4vh;
+}
+
+//身体
+.r-body {
+    width: 100vw;
+    height: 76vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+//上部分显示6个属性
+.r-bodytop {
+    width: 100vw;
+    height: 16vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; //
+    align-items: flex-start;
+}
+
+.r-toprowbox {
+    height: 16vh;
+    width: 16vw;
+    box-sizing: border-box;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+    padding-left: 2vw;
+    padding-right: 2vw; // //border: 1px dotted white;
+    padding: 1px;
+}
+
+.r-toplblbox {
+    width: 100%; // //border: 1px dotted red;
+    text-align: center;
+    font-size: 4vh;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.r-topvaluebox {
+    width: 100%; // //border: 1px dotted blue;
+    text-align: center;
+    font-size: 7vh;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.r-bodybottom {
+    width: 100vw;
+    height: 60vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    //border: 1px dotted white;
+}
+
+//奖池
+.r-rewardsbox {
+    height: 100%;
+    width: 48vw;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-left: 1vw;
+    margin-right: 1vw;
+}
+
+.r-toprewardbox {
+    height: 6vh;
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 1vh 1vh 0vh 0vh;
+    background-color: rgba(0, 0, 0, 0.53);
+    //border: 1px dotted white;
+}
+
+.r-centerrewardbox {
+    height: 6vh;
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 0vh 0vh 0vh 0vh;
+    background-color: rgba(0, 0, 0, 0.53);
+    //border: 1px dotted white;
+    margin-top: 0.75vh;
+}
+
+.r-bottomrewardbox {
+    height: 6vh;
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 0vh 0vh 1vh 1vh;
+    background-color: rgba(0, 0, 0, 0.53);
+    //border: 1px dotted white;
+    margin-top: 0.75vh;
+}
+
+.r-rewardvalue {
+    height: 100%;
+    margin-left: 1vw;
+    margin-right: 2vw;
+    font-size: 3.6vh;
+    text-align:  left;
+    color: rgba(255, 255, 255, 0.86);
+    //border: 1px dotted red;
+}
+
+/*比赛*/
+
+.r-gamebox {
+    height: 100%;
+    width: 48vw;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 1vw;
+    margin-right: 1vw;
+}
+
+.r-countdownbox {
+    width: 100%;
+    height: 32vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 1vh 1vh 0vh 0vh;
+    background-color: rgba(0, 0, 0, 0.53);
+    //border: 1px dotted white;
+}
+
+.r-countdown {
+    width: 100%;
+    height: 32vh;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-size: 32vh;
+}
+
+.r-roundbox {
+    width: 100%;
+    height: 18vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0vh 0vh 0vh 0vh;
+    align-items: flex-start;
+    background-color: rgba(0, 0, 0, 0.63);
+    //border: 1px dotted red;
+}
+
+.r-statusbox {
+    width: 100%;
+    height: 18vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 0vh 0vh 0vh 0vh;
+    background-color: rgba(0, 255, 0, 0.33);
+    //border: 1px dotted red;
+}
+
+.r-nextroundbox {
+    width: 100%;
+    height: 9vh;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 0vh 0vh 1vh 1vh;
+    margin-top: 1vh;
+    background-color: rgba(0, 0, 0, 0.43);
+    //border: 1px dotted white;
+}
+
+.r-statuschs {
+    width: 100%;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 8vh;
+}
+
+.r-statuseng {
+    width: 100%;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 5vh;
+}
+
+.r-rowbox {
+    width: 100%; // height: 10vh;
+    box-sizing: border-box;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 3vw;
+    padding-right: 3vw;
+}
+
+.r-lblbox {
+    box-sizing: border-box;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
+}
+
+.r-valuebox {
+    box-sizing: border-box;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row-reverse;
+    flex-grow: 3;
+    align-items: flex-end;
+    align-items: center;
+}
+
+.r-value {
+    box-sizing: border-box;
+    font-size: 7.5vh;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.r-lblchs {
+    text-align: left;
+    font-size: 3.5vh;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.r-lbleng {
+    text-align: left;
+    font-size: 2vh;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.r-minivalue {
+    box-sizing: border-box;
+    font-size: 6vh;
+    color: rgba(255, 255, 255, 0.44);
+}
+
+.r-minilblchs {
+    text-align: left;
+    font-size: 3.5vh;
+    color: rgba(255, 255, 255, 0.44);
+}
+
+.r-minilbleng {
+    text-align: left;
+    font-size: 2vh;
+    color: rgba(255, 255, 255, 0.44);
+}
