@@ -13,7 +13,7 @@ export class BindedGame extends React.Component {
         super(props);
         this.onShowQrClicked = this.onShowQrClicked.bind(this);
     }
-    
+
     onShowQrClicked(e) {
         this.props.onShowQrClicked();
     }
@@ -90,9 +90,10 @@ export class BindedGame extends React.Component {
             gameTitle = game.get('title');
             let palyers = game.get('players') ? game.get('players') : 0;
             palyerCount = `${palyers ? palyers : '0'}`
-            restPlayers = game.get('restPlayers') ? game.get('restPlayers') : 0;
+            let restPlayersValue = game.get('restPlayers') ? game.get('restPlayers') : 0;
+            restPlayers = `${restPlayersValue ? restPlayersValue : '0'}`
             rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
-          
+
             let chipss = game.get('chipss');
             let total = 0;
             if (chipss) {
@@ -108,8 +109,8 @@ export class BindedGame extends React.Component {
                 }
             }
             let avg = 0;
-            if (total > 0 && restPlayers > 0) {
-                avg = parseInt(total / restPlayers);
+            if (total > 0 && restPlayersValue > 0) {
+                avg = parseInt(total / restPlayersValue);
             }
             totalChips = `${total}`;
             avgChips = `${avg}`;
