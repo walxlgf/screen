@@ -98,10 +98,19 @@ export class BindedGame extends React.Component {
             if (chipss) {
                 for (let i = 0; i < chipss.length; i++) {
                     const chips = chipss[i];
-                    total += chips.count * chips.value;
+                    let count = 0;
+                    if (chips.count)
+                        count = parseInt(chips.count);
+                    let value = 0;
+                    if (chips.value)
+                        value = parseInt(chips.value);
+                    total += count * value;
                 }
             }
-            let avg = parseInt(total / palyers);
+            let avg = 0;
+            if (total > 0 && palyers > 0) {
+                avg = parseInt(total / palyers);
+            }
             totalChips = `${total}`;
             avgChips = `${avg}`;
         }
