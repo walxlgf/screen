@@ -7,6 +7,8 @@ import thunk from 'redux-thunk';
 //初始化Parse
 import Parse from 'parse';
 Parse.initialize('timer');
+console.log(`store:process.env.REACT_APP_SERVER_URL:${process.env.REACT_APP_SERVER_URL}`);
+console.log(`store:process.env.REACT_APP_LIVEQUERY_SERVER_URL:${process.env.REACT_APP_LIVEQUERY_SERVER_URL}`);
 Parse.serverURL = process.env.REACT_APP_SERVER_URL;
 Parse.liveQueryServerURL = process.env.REACT_APP_LIVEQUERY_SERVER_URL;
 

@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './bindedGameWithReward.less';
 
-const marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,undefined];
+const marquees = [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined];
 export class BindedGameWithReward extends React.Component {
     constructor(props) {
         super(props);
@@ -91,19 +91,23 @@ export class BindedGameWithReward extends React.Component {
                 }
             }
             let game = this.props.game;
-            let palyers = game.get('players') ? game.get('players') : 0;
-            let startChips = game.get('startChips') ? game.get('startChips') : 0;
-            let rebuyChips = game.get('rebuyChips') ? game.get('rebuyChips') : 0;
-            let addonChips = game.get('addonChips') ? game.get('addonChips') : 0;
-            let rebuyCount = game.get('rebuyCount') ? game.get('rebuyCount') : 0;
-            let addonCount = game.get('addonCount') ? game.get('addonCount') : 0;
-
             gameTitle = game.get('title');
-            palyerCount = `${palyers ? palyers : '0'}/${rebuyCount ? rebuyCount : '0'}/${addonCount ? addonCount : '0'}`
+            let palyers = game.get('players') ? game.get('players') : 0;
+            palyerCount = `${palyers ? palyers : '0'}`
             restPlayers = game.get('restPlayers') ? game.get('restPlayers') : 0;
             rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
-            totalChips = palyers * startChips + rebuyCount * rebuyChips + addonCount * addonChips;
-            avgChips = parseInt(totalChips / palyers);
+
+            let chipss = game.get('chipss');
+            let total = 0;
+            if (chipss) {
+                for (let i = 0; i < chipss.length; i++) {
+                    const chips = chipss[i];
+                    total += chips.count * chips.value;
+                }
+            }
+            let avg = parseInt(total / palyers);
+            totalChips = `${total}`;
+            avgChips = `${avg}`;
         }
 
         const sliderSettings = {
