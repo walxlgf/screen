@@ -93,13 +93,18 @@ export class BindedGame extends React.Component {
             palyerCount = `${palyers ? palyers : '0'}`
             restPlayers = game.get('restPlayers') ? game.get('restPlayers') : 0;
             rewardPlayers = game.get('rewardPlayers') ? game.get('rewardPlayers') : 0;
+          
+            let chipss = game.get('chipss');
+            let total = 0;
             if (chipss) {
                 for (let i = 0; i < chipss.length; i++) {
                     const chips = chipss[i];
-                    totalChips += chips.count * chips.value;
+                    total += chips.count * chips.value;
                 }
             }
-            avgChips = parseInt(totalChips / palyers);
+            let avg = parseInt(total / palyers);
+            totalChips = `${total}`;
+            avgChips = `${avg}`;
         }
         const sliderSettings = {
             arrows: false,
