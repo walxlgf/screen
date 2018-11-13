@@ -88,7 +88,6 @@ export class BindedGame extends React.Component {
             }
             let game = this.props.game;
             gameTitle = game.get('title');
-            let chipss = game.get('chipss');
             let palyers = game.get('players') ? game.get('players') : 0;
             palyerCount = `${palyers ? palyers : '0'}`
             restPlayers = game.get('restPlayers') ? game.get('restPlayers') : 0;
