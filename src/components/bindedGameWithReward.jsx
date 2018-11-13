@@ -112,8 +112,8 @@ export class BindedGameWithReward extends React.Component {
                 }
             }
             let avg = 0;
-            if (total > 0 && palyers > 0) {
-                avg = parseInt(total / palyers);
+            if (total > 0 && restPlayers > 0) {
+                avg = parseInt(total / restPlayers);
             }
             totalChips = `${total}`;
             avgChips = `${avg}`;
